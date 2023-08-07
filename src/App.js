@@ -1,9 +1,9 @@
 import "./App.css";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { createGlobalStyle } from "styled-components";
-import HomePage from "./components/pages/HomePage";
-import LoginPage from "./components/pages/LoginPage";
-import JoinPage from "./components/pages/JoinPage";
+import HomePage from "./pages/HomePage";
+import LoginPage from "./pages/LoginPage";
+import JoinPage from "./pages/JoinPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -29,8 +29,8 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/join" element={<JoinPage />} />
+          <Route path="/signin" element={<LoginPage />} />
+          <Route path="/signup" element={<JoinPage />} />
         </Routes>
       </Router>
     </>

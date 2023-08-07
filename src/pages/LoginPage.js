@@ -1,5 +1,5 @@
-import JoinForm from "../JoinForm";
-import { Symbol } from "../common/Logo.js";
+import LoginForm from "../components/LoginForm";
+import { Logo } from "../components/common/Logo";
 import styled from "styled-components";
 
 const ParentWrapper = styled.div`
@@ -7,15 +7,15 @@ const ParentWrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 2rem;
+  gap: 1rem;
 `;
 
-const JoinPage = () => {
+const LoginPage = () => {
   return (
     <ParentWrapper>
-      <Symbol />
-      <JoinForm />
+      <Logo />
+      <LoginForm />
     </ParentWrapper>
   );
 };
-export default JoinPage;
+export default LoginPage;

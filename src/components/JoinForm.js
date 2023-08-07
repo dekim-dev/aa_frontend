@@ -2,6 +2,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import InputField from "./common/TextField";
 import Button from "./common/Button";
+import { signup } from "../service/ApiService";
 
 const ParentWrapper = styled.div`
   width: 30%;
@@ -27,7 +28,20 @@ const JoinForm = () => {
   };
 
   const handleJoin = () => {
-    console.log("✨ 회원가입 버튼 클릭");
+    const requestData = {
+      email: state.email,
+      nickname: state.nickname,
+      password: state.pwd,
+    };
+
+    signup(requestData)
+      .then((response) => {
+        console.log(response);
+      })
+      .catch((error) => {
+        alert(error);
+        console.log(error);
+      });
   };
 
   return (
@@ -38,6 +52,16 @@ const JoinForm = () => {
         label={"이메일 주소"}
         value={state.email}
         placeholder={"이메일주소를 입력하세요."}
+        onChange={handleChangeState}
+        helperText={""}
+        width="80%"
+      />
+      <InputField
+        type={"text"}
+        name="nickname"
+        label={"닉네임"}
+        value={state.nickname}
+        placeholder={"닉네임을 입력하세요."}
         onChange={handleChangeState}
         helperText={""}
         width="80%"

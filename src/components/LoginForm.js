@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import InputField from "./common/TextField";
 import Button from "./common/Button";
 import styled from "styled-components";
+import { signin } from "../service/ApiService";
 
 const ParentWrapper = styled.div`
   width: 80%;
@@ -18,8 +19,6 @@ const LoginForm = () => {
   });
 
   const handleChangeState = (e) => {
-    console.log("🍒 name: ", e.target.name);
-    console.log("📝 value: ", e.target.value);
     setState({
       ...state,
       [e.target.name]: e.target.value,
@@ -27,7 +26,19 @@ const LoginForm = () => {
   };
 
   const handleLogin = () => {
-    console.log("✨ 로그인 버튼 클릭");
+    const requestData = {
+      email: state.email,
+      password: state.pwd,
+    };
+
+    signin(requestData)
+      .then((response) => {
+        console.log(response);
+        localStorage.setItem("ACCESS_TOKEN", response.token);
+      })
+      .catch((error) => {
+        console.error("Error signing up:", error);
+      });
   };
 
   const enterKeyEventHandler = (e) => {
