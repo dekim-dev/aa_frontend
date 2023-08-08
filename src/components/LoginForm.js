@@ -34,7 +34,8 @@ const LoginForm = () => {
     signin(requestData)
       .then((response) => {
         console.log(response);
-        localStorage.setItem("ACCESS_TOKEN", response.token);
+        localStorage.setItem("ACCESS_TOKEN", response.tokens.accessToken);
+        localStorage.setItem("REFRESH_TOKEN", response.tokens.refreshToken);
       })
       .catch((error) => {
         console.error("Error signing up:", error);
