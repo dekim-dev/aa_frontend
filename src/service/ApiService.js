@@ -74,28 +74,6 @@ export const signin = async (request) => {
   }
 };
 
-// 번호로 게시글 가져오기
-export const post = async (postId) => {
-  try {
-    const token = localStorage.getItem("ACCESS_TOKEN");
-    const response = await call(`/post/${postId}`, "GET", null, token);
-    return response;
-  } catch (error) {
-    return error;
-  }
-};
-
-// 글쓰기
-export const createPost = async (requestData) => {
-  try {
-    const token = localStorage.getItem("ACCESS_TOKEN");
-    const response = await call(`/post/`, "POST", requestData, token);
-    return response;
-  } catch (error) {
-    return error;
-  }
-};
-
 // 프론트엔드에서의 OPTIONS 요청에 대한 처리
 axios.interceptors.response.use(
   (response) => response,
@@ -126,5 +104,27 @@ export const refreshToken = async (refreshToken) => {
     return newAccessToken;
   } catch (error) {
     throw error;
+  }
+};
+
+// 번호로 게시글 가져오기
+export const post = async (postId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/post/${postId}`, "GET", null, token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+// 글쓰기
+export const createPost = async (requestData) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/post/`, "POST", requestData, token);
+    return response;
+  } catch (error) {
+    return error;
   }
 };
