@@ -4,6 +4,8 @@ import { createGlobalStyle } from "styled-components";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import JoinPage from "./pages/JoinPage";
+import PostPage from "./pages/PostPage";
+import PostWritePage from "./pages/PostWritePage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -31,6 +33,8 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<LoginPage />} />
           <Route path="/signup" element={<JoinPage />} />
+          <Route path="/post" element={<PostWritePage />} />
+          <Route path="/post/:postId" element={<PostPage />} />
         </Routes>
       </Router>
     </>
