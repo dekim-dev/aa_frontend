@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Symbol } from "./Logo";
 import DropDown from "./Dropdown/Dropdown";
+import SideBarIcon from "./SideBar";
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -62,7 +63,7 @@ const NavBar = () => {
     <ParentContainer>
       <InnerConatiner>
         <div className="left_nav">
-          {!isMobile ? <Symbol size={"4rem"} /> : <Symbol size={"3rem"} />}
+          {!isMobile ? <Symbol size={"4rem"} /> : <SideBarIcon />}
         </div>
         <div className="center_nav">
           {!isMobile ? (
