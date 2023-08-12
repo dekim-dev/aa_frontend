@@ -5,11 +5,14 @@ import Button from "./common/Button";
 import { signup } from "../service/ApiService";
 
 const ParentWrapper = styled.div`
-  width: 80%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1.8rem;
+  @media screen and (max-width: 768px) {
+    width: 80%;
+  }
 `;
 
 const JoinForm = () => {
