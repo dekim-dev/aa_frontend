@@ -5,7 +5,7 @@ import Button from "./common/Button";
 import { signup } from "../service/ApiService";
 
 const ParentWrapper = styled.div`
-  width: 30%;
+  width: 80%;
   display: flex;
   flex-direction: column;
   align-items: center;
