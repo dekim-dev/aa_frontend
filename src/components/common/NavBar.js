@@ -1,8 +1,8 @@
-import React from "react";
-import styled, { keyframes } from "styled-components";
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Symbol } from "./Logo";
-import PofileImg from "../../assets/images/profile.jpeg";
+import DropDown from "./Dropdown/Dropdown";
 
 const ParentContainer = styled.div`
   width: 100%;
@@ -22,14 +22,12 @@ const InnerConatiner = styled.div`
   width: 90%;
   display: flex;
   justify-content: space-between;
+  align-items: center;
   padding-bottom: 0.8rem;
-  ul {
+  .boards {
     display: flex;
     gap: 3rem;
     justify-content: space-around;
-    @media screen and (max-width: 768px) {
-      display: none;
-    }
   }
 `;
 
@@ -39,62 +37,60 @@ const StyledNavLink = styled(NavLink)`
   }
   &.active {
     font-weight: 800;
-    border-bottom: solid 3px;
-    padding-bottom: 4px;
-  }
-`;
-
-// Keyframes 정의
-const borderAnimation = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-`;
-const ProfileIcon = styled.div`
-  img {
-    width: 3rem;
-    height: 3rem;
-    border-radius: 50%;
-    border: 3px solid #ececec;
-    cursor: pointer;
-    transition: transform 0.3s; /* 애니메이션을 부드럽게 하기 위한 설정 */
-  }
-  &:hover {
-    animation: ${borderAnimation} 0.5s ease-in-out; /* 애니메이션을 적용 */
+    border-bottom: solid 2px;
+    padding-bottom: 2px;
   }
 `;
 
 const NavBar = () => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+  console.log("📌isMobile: ", isMobile);
+
   return (
     <ParentContainer>
       <InnerConatiner>
-        <Symbol size={"4rem"} />
-        <ul className="isWeb">
-          <li>
-            <StyledNavLink to="/board1">게시판1</StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink to="/board2">게시판2</StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink to="/board3">게시판3</StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink to="/board4">게시판4</StyledNavLink>
-          </li>
-          <li>
-            <StyledNavLink to="/board5">게시판5</StyledNavLink>
-          </li>
-        </ul>
-        <ProfileIcon>
-          <img src={PofileImg} alt="profile" />
-        </ProfileIcon>
+        <div className="left_nav">
+          {!isMobile ? <Symbol size={"4rem"} /> : <Symbol size={"3rem"} />}
+        </div>
+        <div className="center_nav">
+          {!isMobile ? (
+            <ul className="boards">
+              <li>
+                <StyledNavLink to="/board1">게시판1</StyledNavLink>
+              </li>
+              <li>
+                <StyledNavLink to="/board2">게시판2</StyledNavLink>
+              </li>
+              <li>
+                <StyledNavLink to="/board3">게시판3</StyledNavLink>
+              </li>
+              <li>
+                <StyledNavLink to="/board4">게시판4</StyledNavLink>
+              </li>
+              <li>
+                <StyledNavLink to="/board5">게시판5</StyledNavLink>
+              </li>
+            </ul>
+          ) : (
+            ""
+          )}
+        </div>
+
+        <div className="right_nav">
+          <DropDown />
+        </div>
       </InnerConatiner>
     </ParentContainer>
   );
