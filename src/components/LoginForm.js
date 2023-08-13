@@ -3,6 +3,7 @@ import InputField from "./common/TextField";
 import Button from "./common/Button";
 import styled from "styled-components";
 import { signin } from "../service/ApiService";
+import { useNavigate } from "react-router-dom";
 
 const ParentWrapper = styled.div`
   width: 80%;
@@ -13,6 +14,7 @@ const ParentWrapper = styled.div`
 `;
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     email: "",
     pwd: "",
@@ -33,11 +35,14 @@ const LoginForm = () => {
 
     signin(requestData)
       .then((response) => {
+        alert(`${response.nickname}님 안녕하세요!`);
+        navigate("/");
         console.log(response);
         // localStorage.setItem("ACCESS_TOKEN", response.accessToken);
         // localStorage.setItem("REFRESH_TOKEN", response.tokens.refreshToken);
       })
       .catch((error) => {
+        alert("로그인에 실패했습니다.");
         console.error("Error signing up:", error);
       });
   };

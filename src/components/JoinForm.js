@@ -3,6 +3,7 @@ import styled from "styled-components";
 import InputField from "./common/TextField";
 import Button from "./common/Button";
 import { signup } from "../service/ApiService";
+import { useNavigate } from "react-router-dom";
 
 const ParentWrapper = styled.div`
   width: 30%;
@@ -16,6 +17,7 @@ const ParentWrapper = styled.div`
 `;
 
 const JoinForm = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     email: "",
     nickname: "",
@@ -39,10 +41,12 @@ const JoinForm = () => {
 
     signup(requestData)
       .then((response) => {
+        alert("회원가입이 완료되었습니다. 로그인 페이지로 이동합니다");
+        navigate("/signin");
         console.log(response);
       })
       .catch((error) => {
-        alert(error);
+        alert("회원가입에 실패하였습니다.");
         console.log(error);
       });
   };
