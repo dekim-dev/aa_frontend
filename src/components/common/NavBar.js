@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import { NavLink } from "react-router-dom";
 import { Symbol } from "./Logo";
 import DropDown from "./Dropdown/Dropdown";
 import SideBarIcon from "./SideBar";
+import useWindowResize from "../../utils/useWindowResize";
 
 const ParentContainer = styled.div`
   width: 100%;
   height: 90px;
   margin: 0 auto;
-  margin-bottom: 1rem;
+  margin-bottom: 2rem;
   padding-top: 1rem;
   background-color: #ffffff;
   box-shadow: rgba(0, 0, 0, 0.15) 0px 3px 3px 0px;
@@ -46,20 +47,7 @@ const StyledNavLink = styled(NavLink)`
 `;
 
 const NavBar = () => {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-
-  useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
-  console.log("📌isMobile: ", isMobile);
+  const isMobile = useWindowResize();
 
   return (
     <ParentContainer>
