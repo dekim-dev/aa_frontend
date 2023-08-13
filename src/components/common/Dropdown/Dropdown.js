@@ -1,26 +1,13 @@
 import { useEffect, useState } from "react";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import ProfileImg from "../../../assets/images/profile.jpeg";
 import NonMember from "../../../assets/images/nonMemberImg.svg";
-
 import DropdownContent from "./DropdownMenu";
 
 const DropDownWrapper = styled.div`
   position: relative;
 `;
 
-// Keyframes 정의
-const borderAnimation = keyframes`
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.1);
-  }
-  100% {
-    transform: scale(1);
-  }
-`;
 const ProfileIcon = styled.img`
   width: 3rem;
   height: 3rem;

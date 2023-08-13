@@ -4,21 +4,22 @@ import LogoSVG from "../../assets/images/aa_logo.svg";
 import SymbolSVG from "../../assets/images/aa_symbol.svg";
 
 const StyledImage = styled.img`
-  width: ${(props) => props.size || "8rem"};
+  width: ${(props) => props.width || "8rem"};
+  height: ${(props) => props.height || "8rem"};
 `;
 
-const Logo = ({ size }) => {
+const Logo = ({ width, height }) => {
   return (
     <Link to="/">
-      <StyledImage src={LogoSVG} alt="logo" size={size} />
+      <StyledImage src={LogoSVG} alt="logo" width={width} height={height} />
     </Link>
   );
 };
 
-const Symbol = ({ size }) => {
+const Symbol = ({ width, height }) => {
   return (
     <Link to="/">
-      <StyledImage src={SymbolSVG} alt="logo" size={size} />
+      <StyledImage src={SymbolSVG} alt="logo" width={width} height={height} />
     </Link>
   );
 };

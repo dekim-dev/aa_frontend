@@ -73,7 +73,7 @@ const SideBar = ({ setIsSideBarOpen }) => {
         <p>❌</p>
       </div>
       <div style={{ marginTop: "2rem" }}>
-        <Symbol size={"8rem"} />
+        <Symbol width={"8rem"} height={"8rem"} />
       </div>
       <div className="side_bar_menu">
         <Link to="/" onClick={handleLinkClick}>

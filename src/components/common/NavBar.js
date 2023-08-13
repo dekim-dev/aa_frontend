@@ -7,6 +7,7 @@ import SideBarIcon from "./SideBar";
 
 const ParentContainer = styled.div`
   width: 100%;
+  height: 90px;
   margin: 0 auto;
   margin-bottom: 1rem;
   padding-top: 1rem;
@@ -21,6 +22,7 @@ const ParentContainer = styled.div`
 const InnerConatiner = styled.div`
   margin: 0 auto;
   width: 90%;
+  height: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -63,7 +65,11 @@ const NavBar = () => {
     <ParentContainer>
       <InnerConatiner>
         <div className="left_nav">
-          {!isMobile ? <Symbol size={"4rem"} /> : <SideBarIcon />}
+          {!isMobile ? (
+            <Symbol width={"4rem"} height={"4rem"} />
+          ) : (
+            <SideBarIcon />
+          )}
         </div>
         <div className="center_nav">
           {!isMobile ? (
@@ -96,5 +102,4 @@ const NavBar = () => {
     </ParentContainer>
   );
 };
-
 export default NavBar;
