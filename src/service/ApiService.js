@@ -68,6 +68,8 @@ export const signin = async (request) => {
     const response = await axios.post(API_BASE_URL + "/signin", request);
     const token = response.data.accessToken; // 서버 응답에서 토큰 추출
     localStorage.setItem("ACCESS_TOKEN", `${token}`); // 토큰 저장
+    window.location.replace("/"); // 임시로 새로고침
+    console.log("✔ 로그인 완료");
     return response;
   } catch (error) {
     return error;

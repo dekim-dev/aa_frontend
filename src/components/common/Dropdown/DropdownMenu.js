@@ -64,7 +64,7 @@ const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
         <StyledLink to="/mypage" onClick={handleLinkClick}>
           마이페이지
         </StyledLink>
-        <StyledLink to="/" onClick={handleLinkClick}>
+        <StyledLink to="/" onClick={signOut}>
           로그아웃
         </StyledLink>
       </DropdownMenu>
@@ -83,3 +83,10 @@ const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
   }
 };
 export default DropdownContent;
+
+// 임시 로그아웃
+const signOut = () => {
+  localStorage.removeItem("ACCESS_TOKEN");
+  window.location.replace("/");
+  console.log("✔ 로그아웃 완료");
+};
