@@ -8,6 +8,7 @@ import PostPage from "./pages/PostPage";
 import PostWritePage from "./pages/PostWritePage";
 import NavBar from "./components/common/NavBar";
 import BoardPage from "./pages/BoardPage";
+import ClinicListPage from "./pages/ClinicListPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -43,7 +44,7 @@ function App() {
           <Route path="board2" element={<BoardPage boardName="board2" />} />
           <Route path="board3" element={<BoardPage boardName="board3" />} />
           <Route path="board4" element={<BoardPage boardName="board4" />} />
-          <Route path="board5" element={<BoardPage boardName="board5" />} />
+          <Route path="/clinic/list" element={<ClinicListPage />} />
         </Routes>
       </Router>
     </>

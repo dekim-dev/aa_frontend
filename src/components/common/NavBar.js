@@ -75,7 +75,7 @@ const NavBar = () => {
                 <StyledNavLink to="/board4">게시판4</StyledNavLink>
               </li>
               <li>
-                <StyledNavLink to="/board5">게시판5</StyledNavLink>
+                <StyledNavLink to="/clinic/list">병원찾기</StyledNavLink>
               </li>
             </ul>
           ) : (

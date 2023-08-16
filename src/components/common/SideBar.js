@@ -91,8 +91,8 @@ const SideBar = ({ setIsSideBarOpen }) => {
         <Link to="/board4" onClick={handleLinkClick}>
           <p>게시판4</p>
         </Link>
-        <Link to="/board5" onClick={handleLinkClick}>
-          <p>게시판5</p>
+        <Link to="/clinic/list" onClick={handleLinkClick}>
+          <p>병원찾기</p>
         </Link>
       </div>
       <div className="logo_text" style={{ marginTop: "6rem" }}>
