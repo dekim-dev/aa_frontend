@@ -130,3 +130,19 @@ export const createPost = async (requestData) => {
     return error;
   }
 };
+
+// 병원 리스트
+export const getClinicList = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/list?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
