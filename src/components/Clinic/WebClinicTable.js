@@ -4,7 +4,6 @@ import { styled } from "styled-components";
 const StyledTable = styled.table`
   margin: 0 auto;
   width: 80%;
-  height: 100vh;
   border-collapse: collapse;
   text-align: left;
   thead {
@@ -26,13 +25,21 @@ const StyledTable = styled.table`
     white-space: nowrap;
   }
   .clinic_name {
-    min-width: 20%;
+    width: 18rem;
+    max-width: 18rem;
     font-weight: 500;
     &:hover {
       font-weight: bold;
       text-decoration: underline;
       text-underline-position: under;
     }
+  }
+  .clinic_addr {
+    width: 40rem;
+    max-width: 40rem;
+  }
+  .clinic_tel {
+    width: 10rem;
   }
 `;
 
