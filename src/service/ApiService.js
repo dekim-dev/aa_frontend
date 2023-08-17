@@ -146,3 +146,19 @@ export const getClinicList = async (page, pageSize) => {
     return error;
   }
 };
+
+// 병원 키워드로 검색
+export const getClinicListByKeyword = async (keyword, page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/search?keyword=${keyword}&page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
