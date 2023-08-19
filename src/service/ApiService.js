@@ -162,3 +162,14 @@ export const getClinicListByKeyword = async (keyword, page, pageSize) => {
     return error;
   }
 };
+
+// 병원 디테일 정보
+export const getClinicInfoById = async (id) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/clinics/${id}`, "GET", null, token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
