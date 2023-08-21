@@ -2,18 +2,11 @@ import React, { useEffect } from "react";
 import styled from "styled-components";
 const { kakao } = window;
 
-const ParentContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-`;
-
 const MapContainer = styled.div`
-  width: 32rem;
+  width: 100%;
   height: 28rem;
   border: 1px solid black;
   @media screen and (max-width: 768px) {
-    width: 20rem;
     height: 18rem;
   }
 `;
@@ -58,10 +51,9 @@ const KakaoMap = ({ latitude, longitude, name }) => {
   }, [latitude, longitude, name]);
 
   return (
-    <ParentContainer>
-      <h3>📍지도에서 보기</h3>
+    <>
       <MapContainer id="map"></MapContainer>
-    </ParentContainer>
+    </>
   );
 };
 
