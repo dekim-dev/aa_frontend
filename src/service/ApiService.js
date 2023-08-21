@@ -173,3 +173,19 @@ export const getClinicInfoById = async (id) => {
     return error;
   }
 };
+
+// 병원 주소로 검색
+export const getClinicListByAddress = async (address, page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/searchAddress?address=${address}&page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
