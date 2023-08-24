@@ -11,9 +11,6 @@ import BoardPage from "./pages/BoardPage";
 import ClinicListPage from "./pages/ClinicListPage";
 import ClinicDetailPage from "./pages/ClinicDetailPage";
 import MyPage from "./pages/MyPage";
-import TodoList from "./components/MyPage/TodoList/TodoList";
-import DiaryList from "./components/MyPage/Diary.js/DiaryList";
-import InfoEditor from "./components/MyPage/MySetting/InfoEditor";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -51,10 +48,7 @@ function App() {
           <Route path="board4" element={<BoardPage boardName="board4" />} />
           <Route path="/clinic/list" element={<ClinicListPage />} />
           <Route path="/clinic/:clinicId" element={<ClinicDetailPage />} />
-          <Route path="/mypage" element={<MyPage />} />
-          <Route path="/mypage/tdlist" element={<TodoList />} />
-          <Route path="/mypage/diary" element={<DiaryList />} />
-          <Route path="/mypage/setting" element={<InfoEditor />} />
+          <Route path="/mypage/*" element={<MyPage />} />
         </Routes>
       </Router>
     </>
