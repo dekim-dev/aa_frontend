@@ -63,7 +63,7 @@ const StyledCalendar = ({ onDateSelect }) => {
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
-    onDateSelect(date);
+    onDateSelect(date); // 선택한 날짜를 부모 컴포넌트로 전달
   };
 
   return (
@@ -72,4 +72,5 @@ const StyledCalendar = ({ onDateSelect }) => {
     </ParentWrapper>
   );
 };
+
 export default StyledCalendar;

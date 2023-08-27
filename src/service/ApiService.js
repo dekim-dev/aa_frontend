@@ -189,3 +189,51 @@ export const getClinicListByAddress = async (address, page, pageSize) => {
     return error;
   }
 };
+
+// Todo 아이템 생성
+export const createTodoItem = async (todoItemDTO) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/todo-item", "POST", todoItemDTO, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 날짜 범위에 해당하는 Todo 아이템 목록 조회
+export const getTodoItemsByDateRange = async (startDate, endDate) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/todo-item/items?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+      "GET",
+      token
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Todo 아이템 삭제
+export const deleteTodoItem = async (itemId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/todo-item/${itemId}`, "DELETE", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Todo 아이템 상태 업데이트
+export const updateTodoItemStatus = async (itemId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/todo-item/${itemId}`, "PUT", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { TodoItems } from "../../../DummyData";
+import ItemDeleteIcon from "./ItemDeleteIcon";
+import {
+  createTodoItem,
+  deleteTodoItem,
+  updateTodoItemStatus,
+} from "../../../service/ApiService";
+import ItemAddIcon from "./ItemAddIcon";
 
 const ParentWrapper = styled.div`
   padding: 1rem;
@@ -9,6 +15,13 @@ const ParentWrapper = styled.div`
   gap: 1rem;
   border: 1px solid black;
   border-radius: 10px;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+
   .todo_item_container {
     display: flex;
     align-items: center;
@@ -16,7 +29,6 @@ const ParentWrapper = styled.div`
 
   .todo_item_title {
     display: flex;
-
     padding: 0.2rem;
     border-radius: 4px;
   }
@@ -29,6 +41,10 @@ const ParentWrapper = styled.div`
   .evening {
     background-color: #c3beff;
   }
+  .done {
+    text-decoration: line-through;
+  }
+
   .todo_item_priority_1 {
     font-size: 0.4rem;
     font-weight: bold;
@@ -45,45 +61,58 @@ const ParentWrapper = styled.div`
 
 const Checkbox = styled.input`
   margin-right: 0.5rem;
-  width: 20px; /* 원하는 너비 설정 */
-  height: 20px; /* 원하는 높이 설정 */
+  width: 20px;
+  height: 20px;
 `;
 
-const DailyTodoList = ({ selectedDate }) => {
+const DailyTodoList = ({ selectedDate, dailyTodoItems }) => {
   const [dailyTodoList, setDailyTodoList] = useState([]);
 
   useEffect(() => {
-    // TodoItems를 복제하여 원본 데이터를 유지하고 정렬된 목록을 생성
-    const sortedTodoList = [...TodoItems];
-
-    // 시간대와 우선순위로 정렬
-    sortedTodoList.sort((a, b) => {
-      // 시간대가 다르면 시간대로 정렬
-      const timeOfDayOrder = ["MORNING", "AFTERNOON", "EVENING"];
-      const timeOfDayA = a.timeOfDay;
-      const timeOfDayB = b.timeOfDay;
-
-      if (
-        timeOfDayOrder.indexOf(timeOfDayA) !== -1 &&
-        timeOfDayOrder.indexOf(timeOfDayB) !== -1
-      ) {
-        const timeComparison =
-          timeOfDayOrder.indexOf(timeOfDayA) -
-          timeOfDayOrder.indexOf(timeOfDayB);
-
-        if (timeComparison === 0) {
-          // 시간대가 같으면 우선순위로 정렬
-          return a.priority - b.priority;
-        }
-
-        return timeComparison;
-      }
-
-      return 0;
-    });
+    const sortedTodoList = sortTodoList(dailyTodoItems);
 
     setDailyTodoList(sortedTodoList);
-  }, []);
+  }, [selectedDate, dailyTodoItems]);
+
+  const handleDelete = async (itemId) => {
+    try {
+      await deleteTodoItem(itemId);
+
+      // 삭제 후 dailyTodoItems에서 삭제된 아이템 제외하여 새로운 목록 설정
+      const updatedTodoList = dailyTodoList.filter(
+        (item) => item.id !== itemId
+      );
+      setDailyTodoList(updatedTodoList);
+    } catch (error) {
+      console.error("아이템 삭제 에러", error);
+    }
+  };
+
+  const handleAdd = async (newItem) => {
+    try {
+      const response = await createTodoItem(newItem);
+      const updatedList = [...dailyTodoList, response];
+      const sortedList = sortTodoList(updatedList);
+      setDailyTodoList(sortedList);
+    } catch (error) {
+      console.error("아이템 추가 에러:", error);
+    }
+  };
+
+  const handleUpdateStatus = async (itemId, currentStatus) => {
+    try {
+      const newStatus = currentStatus === "DONE" ? "NOT_STARTED" : "DONE";
+      await updateTodoItemStatus(itemId, newStatus);
+
+      // 상태 변경 후, 변경된 상태로 dailyTodoList 업데이트
+      const updatedList = dailyTodoList.map((item) =>
+        item.id === itemId ? { ...item, todoItemStatus: newStatus } : item
+      );
+      setDailyTodoList(updatedList);
+    } catch (error) {
+      console.error("상태 변경 실패:", error);
+    }
+  };
 
   const getTimeOfDay = (timeOfDay) => {
     if (timeOfDay === "MORNING") {
@@ -106,30 +135,74 @@ const DailyTodoList = ({ selectedDate }) => {
   };
 
   const formatDate = (date) => {
-    const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, "0");
     const day = String(date.getDate()).padStart(2, "0");
     const weekdays = ["일", "월", "화", "수", "목", "금", "토"];
     const dayOfWeek = weekdays[date.getDay()]; // 요일을 한글로 변환
-    return `${year}-${month}-${day} (${dayOfWeek})`;
+    return `${month}/${day} (${dayOfWeek})`;
   };
 
   return (
     <ParentWrapper>
-      <h2>{formatDate(selectedDate)}</h2>
+      <div className="header">
+        <h2>{formatDate(selectedDate)}</h2>
+        <ItemAddIcon selectedDate={selectedDate} handleAdd={handleAdd} />
+      </div>
       {dailyTodoList &&
         dailyTodoList.map((item) => (
           <div className="todo_item_container" key={item.id}>
-            <Checkbox type="checkbox" />
-            <div className={`todo_item_title ${getTimeOfDay(item.timeOfDay)}`}>
+            <Checkbox
+              type="checkbox"
+              onClick={() => handleUpdateStatus(item.id, item.todoItemStatus)}
+            />
+            <div
+              className={`todo_item_title ${getTimeOfDay(item.timeOfDay)} ${
+                item.todoItemStatus === "DONE" ? "done" : ""
+              }`}
+            >
               {item.itemName}
             </div>
             <div className={`todo_item_priority_${item.priority}`}>
               {getPriority(item.priority)}
             </div>
+            <ItemDeleteIcon
+              className="delete_icon"
+              itemId={item.id}
+              handleDelete={handleDelete}
+            />
           </div>
         ))}
     </ParentWrapper>
   );
 };
 export default DailyTodoList;
+
+// 정렬
+const sortTodoList = (todoList) => {
+  const sortedList = [...todoList];
+
+  // 시간대와 우선순위로 정렬
+  sortedList.sort((a, b) => {
+    // 시간대가 다르면 시간대로 정렬
+    const timeOfDayOrder = ["MORNING", "AFTERNOON", "EVENING"];
+    const timeOfDayA = a.timeOfDay;
+    const timeOfDayB = b.timeOfDay;
+
+    if (
+      timeOfDayOrder.indexOf(timeOfDayA) !== -1 &&
+      timeOfDayOrder.indexOf(timeOfDayB) !== -1
+    ) {
+      const timeComparison =
+        timeOfDayOrder.indexOf(timeOfDayA) - timeOfDayOrder.indexOf(timeOfDayB);
+
+      if (timeComparison === 0) {
+        // 시간대가 같으면 우선순위로 정렬
+        return a.priority - b.priority;
+      }
+      return timeComparison;
+    }
+    return 0;
+  });
+
+  return sortedList;
+};
