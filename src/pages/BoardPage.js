@@ -2,7 +2,11 @@ import React from "react";
 import styled from "styled-components";
 import BoardTable from "../components/Board/BoardTable";
 import BoardSearch from "../components/Board/BoardSearch";
-import Pagination from "../components/Board/Pagination";
+import WriteButton from "../components/Post/WriteButton";
+import {
+  FreeBoardTopics,
+  QnABoardTopics,
+} from "../components/Post/TopicSelectBox";
 
 const ParentWrapper = styled.div`
   width: 100%;
@@ -12,17 +16,37 @@ const ParentWrapper = styled.div`
   h2 {
     text-align: center;
   }
+  .search_bar {
+    margin: 0 auto;
+    width: 80%;
+    display: flex;
+    align-item: center;
+    justify-content: space-between;
+  }
 `;
 
-const BoardPage = ({ boardName }) => {
-  const boardNo = boardName.substring(boardName.length - 1);
+const koreanBoardNames = {
+  free: "자유게시판",
+  qna: "질문게시판",
+  best: "베스트게시판",
+  notice: "공지사항",
+  clinic: "병원찾기게시판",
+};
 
+const BoardPage = ({ boardName }) => {
+  const koreanBoardName = koreanBoardNames[boardName] || boardName;
   return (
     <ParentWrapper>
-      <h2>게시판 {boardNo}</h2>
-      <BoardSearch />
+      <h2> {koreanBoardName}</h2>
+      <div className="search_bar">
+        <div className="select_box">
+          {boardName === "free" && <FreeBoardTopics />}
+          {boardName === "qna" && <QnABoardTopics />}
+        </div>
+        <BoardSearch />
+      </div>
       <BoardTable boardName={boardName} />
-      <Pagination />
+      <WriteButton />
     </ParentWrapper>
   );
 };
