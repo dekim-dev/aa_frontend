@@ -63,19 +63,19 @@ const NavBar = () => {
           {!isMobile ? (
             <ul className="boards">
               <li>
-                <StyledNavLink to="/board1">게시판1</StyledNavLink>
+                <StyledNavLink to="/board/free">자유게시판</StyledNavLink>
               </li>
               <li>
-                <StyledNavLink to="/board2">게시판2</StyledNavLink>
+                <StyledNavLink to="/board/qna">질문게시판</StyledNavLink>
               </li>
               <li>
-                <StyledNavLink to="/board3">게시판3</StyledNavLink>
-              </li>
-              <li>
-                <StyledNavLink to="/board4">게시판4</StyledNavLink>
+                <StyledNavLink to="/board/best">베스트게시판</StyledNavLink>
               </li>
               <li>
                 <StyledNavLink to="/clinic/list">병원찾기</StyledNavLink>
+              </li>
+              <li>
+                <StyledNavLink to="/board/notice">공지사항</StyledNavLink>
               </li>
             </ul>
           ) : (

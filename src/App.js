@@ -42,10 +42,13 @@ function App() {
           <Route path="/signup" element={<JoinPage />} />
           <Route path="/post" element={<PostWritePage />} />
           <Route path="/post/:postId" element={<PostPage />} />
-          <Route path="board1" element={<BoardPage boardName="board1" />} />
-          <Route path="board2" element={<BoardPage boardName="board2" />} />
-          <Route path="board3" element={<BoardPage boardName="board3" />} />
-          <Route path="board4" element={<BoardPage boardName="board4" />} />
+          <Route path="/board/free" element={<BoardPage boardName="free" />} />
+          <Route path="/board/qna" element={<BoardPage boardName="qna" />} />
+          <Route path="/board/best" element={<BoardPage boardName="best" />} />
+          <Route
+            path="/board/notice"
+            element={<BoardPage boardName="notice" />}
+          />
           <Route path="/clinic/list" element={<ClinicListPage />} />
           <Route path="/clinic/:clinicId" element={<ClinicDetailPage />} />
           <Route path="/mypage/*" element={<MyPage />} />

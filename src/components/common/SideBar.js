@@ -79,20 +79,20 @@ const SideBar = ({ setIsSideBarOpen }) => {
         <Link to="/" onClick={handleLinkClick}>
           <p>홈</p>
         </Link>
-        <Link to="/board1" onClick={handleLinkClick}>
-          <p>게시판1</p>
+        <Link to="/board/free" onClick={handleLinkClick}>
+          <p>자유게시판</p>
         </Link>
-        <Link to="/board2" onClick={handleLinkClick}>
-          <p>게시판2</p>
+        <Link to="/board/qna" onClick={handleLinkClick}>
+          <p>질문게시판</p>
         </Link>
-        <Link to="/board3" onClick={handleLinkClick}>
-          <p>게시판3</p>
-        </Link>
-        <Link to="/board4" onClick={handleLinkClick}>
-          <p>게시판4</p>
+        <Link to="/board/best" onClick={handleLinkClick}>
+          <p>베스트게시판</p>
         </Link>
         <Link to="/clinic/list" onClick={handleLinkClick}>
           <p>병원찾기</p>
+        </Link>
+        <Link to="/board/notice" onClick={handleLinkClick}>
+          <p>공지사항</p>
         </Link>
       </div>
       <div className="logo_text" style={{ marginTop: "6rem" }}>
