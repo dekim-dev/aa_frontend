@@ -46,7 +46,7 @@ const BoardPage = ({ boardName }) => {
         <BoardSearch />
       </div>
       <BoardTable boardName={boardName} />
-      <WriteButton />
+      {!(boardName === "notice") && <WriteButton />}
     </ParentWrapper>
   );
 };
