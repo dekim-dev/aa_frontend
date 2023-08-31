@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import BoardTable from "../components/Board/BoardTable";
 import BoardSearch from "../components/Board/BoardSearch";
@@ -7,6 +7,8 @@ import {
   FreeBoardTopics,
   QnABoardTopics,
 } from "../components/Post/TopicSelectBox";
+import { getPostsByBoardCategory } from "../service/ApiService";
+import { useLocation } from "react-router-dom";
 
 const ParentWrapper = styled.div`
   width: 100%;
@@ -20,7 +22,7 @@ const ParentWrapper = styled.div`
     margin: 0 auto;
     width: 80%;
     display: flex;
-    align-item: center;
+    align-items: center;
     justify-content: space-between;
   }
 `;
@@ -35,6 +37,29 @@ const koreanBoardNames = {
 
 const BoardPage = ({ boardName }) => {
   const koreanBoardName = koreanBoardNames[boardName] || boardName;
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const pageSize = queryParams.get("pageSize") || 10;
+  const [postList, setPostList] = useState([]);
+
+  const getPostListByBoardCategory = async (page) => {
+    try {
+      const response = await getPostsByBoardCategory(
+        page - 1,
+        pageSize,
+        boardName
+      );
+      setPostList(response.content);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getPostListByBoardCategory();
+  }, [boardName]);
+
   return (
     <ParentWrapper>
       <h2> {koreanBoardName}</h2>
@@ -45,7 +70,7 @@ const BoardPage = ({ boardName }) => {
         </div>
         <BoardSearch />
       </div>
-      <BoardTable boardName={boardName} />
+      <BoardTable boardName={boardName} postList={postList} />
       {!(boardName === "notice") && <WriteButton />}
     </ParentWrapper>
   );

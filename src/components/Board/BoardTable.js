@@ -49,10 +49,11 @@ const StyledTable = styled.table`
   }
 `;
 
-const WebBoardTable = ({ boardName }) => {
+const WebBoardTable = ({ boardName, postList }) => {
   const filteredPosts = posts.filter(
     (post) => post.boardCategory === boardName
   );
+  console.log("🍒", postList);
 
   return (
     <>
@@ -68,7 +69,7 @@ const WebBoardTable = ({ boardName }) => {
             </tr>
           </thead>
           <tbody>
-            {filteredPosts.map((post) => (
+            {postList.map((post) => (
               <tr key={post.id}>
                 <td className="title">
                   <Link to={`/post/${post.id}`}>{post.title}</Link>
@@ -130,7 +131,7 @@ const MobileWrapper = styled.div`
   }
 `;
 
-const MobileBoardTable = ({ boardName }) => {
+const MobileBoardTable = ({ boardName, postList }) => {
   const filteredPosts = posts.filter(
     (post) => post.boardCategory === boardName
   );
@@ -155,12 +156,12 @@ const MobileBoardTable = ({ boardName }) => {
   );
 };
 
-const BoardTable = ({ boardName }) => {
+const BoardTable = ({ boardName, postList }) => {
   const isMobile = useWindowResize();
 
   if (isMobile) {
-    return <MobileBoardTable boardName={boardName} />;
+    return <MobileBoardTable boardName={boardName} postList={postList} />;
   }
-  return <WebBoardTable boardName={boardName} />;
+  return <WebBoardTable boardName={boardName} postList={postList} />;
 };
 export default BoardTable;

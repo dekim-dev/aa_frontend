@@ -237,3 +237,22 @@ export const updateTodoItemStatus = async (itemId) => {
     throw error;
   }
 };
+
+// 게시판별로 글 불러오기
+export const getPostsByBoardCategory = async (
+  page,
+  pageSize,
+  boardCategory
+) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/post/category/${boardCategory}`,
+      "GET",
+      token
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
