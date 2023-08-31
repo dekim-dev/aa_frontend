@@ -2,8 +2,8 @@ import { Route, Routes } from "react-router-dom";
 import { styled } from "styled-components";
 import Menu from "../components/MyPage/Menu";
 import TodoList from "../components/MyPage/TodoList/TodoList";
-import DiaryList from "../components/MyPage/Diary.js/DiaryList";
 import InfoEditor from "../components/MyPage/MySetting/InfoEditor";
+import DiaryList from "../components/MyPage/Diary/DiaryList";
 
 const ParentWrapper = styled.div`
   display: flex;
