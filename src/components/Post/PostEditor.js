@@ -3,6 +3,8 @@ import { styled } from "styled-components";
 import { createPost } from "../../service/ApiService";
 import { FreeBoardTopics, QnABoardTopics } from "./TopicSelectBox";
 import { useNavigate } from "react-router-dom";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
 const ParentWrapper = styled.div`
   margin: 0 auto;
@@ -12,15 +14,42 @@ const ParentWrapper = styled.div`
   align-items: center;
   gap: 1rem;
 `;
+
+const SelectBoxContainer = styled.div`
+  width: 80%;
+  display: flex;
+  gap: 1rem;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    min-width: 350px;
+  }
+`;
 const StyledTextField = styled.input`
-  border-radius: 6px;
+  width: 80%;
+  height: 2rem;
+  border-radius: 2px;
+  border: 1px solid gray;
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    min-width: 350px;
+  }
 `;
-const StyledTextArea = styled.textarea`
-  width: 300px;
-  height: 500px;
-  border-radius: 10px;
+
+const StyledCkEditor = styled.div`
+  width: 80%;
+  .ck.ck-editor__editable:not(.ck-editor__nested-editable) {
+    min-height: 400px;
+  }
+  @media screen and (max-width: 768px) {
+    width: 100%;
+    min-width: 350px;
+  }
 `;
-const StyledButton = styled.button``;
+
+const StyledButton = styled.button`
+  width: 4rem;
+  height: 2rem;
+`;
 
 const BoardSelectBox = ({ onChange }) => {
   return (
@@ -78,7 +107,7 @@ const PostEditor = () => {
   };
   return (
     <ParentWrapper>
-      <div className="select_boxes">
+      <SelectBoxContainer>
         <BoardSelectBox onChange={handleBoardChange} />
         {selectedBoard === "free" && (
           <FreeBoardTopics onChange={handleTopicChange} />
@@ -86,7 +115,7 @@ const PostEditor = () => {
         {selectedBoard === "qna" && (
           <QnABoardTopics onChange={handleTopicChange} />
         )}
-      </div>
+      </SelectBoxContainer>
       <StyledTextField
         label="글 제목"
         type="text"
@@ -96,11 +125,20 @@ const PostEditor = () => {
         width="250px"
         placeholder="글 제목을 입력하세요"
       />
-      <StyledTextArea
-        name="content"
-        value={state.content}
-        onChange={handleChangeState}
-      />
+      <StyledCkEditor>
+        <CKEditor
+          editor={ClassicEditor}
+          data="<p>내용을 입력하세요.</p>"
+          onChange={(event, editor) => {
+            const data = editor.getData();
+            console.log({ event, editor, data });
+            setState({
+              ...state,
+              content: data,
+            });
+          }}
+        />
+      </StyledCkEditor>
       <StyledButton onClick={handleSubmit}>등 록</StyledButton>
     </ParentWrapper>
   );
