@@ -247,8 +247,9 @@ export const getPostsByBoardCategory = async (
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");
     const response = await call(
-      `/post/category/${boardCategory}`,
+      `/post/category/${boardCategory}?page=${page}&pageSize=${pageSize}`,
       "GET",
+      null,
       token
     );
     return response;

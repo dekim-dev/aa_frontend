@@ -9,6 +9,7 @@ import {
 } from "../components/Post/TopicSelectBox";
 import { getPostsByBoardCategory } from "../service/ApiService";
 import { useLocation } from "react-router-dom";
+import Pagination from "../components/common/Pagination";
 
 const ParentWrapper = styled.div`
   width: 100%;
@@ -25,6 +26,9 @@ const ParentWrapper = styled.div`
     align-items: center;
     justify-content: space-between;
   }
+  .pagination {
+    align-self: center;
+  }
 `;
 
 const koreanBoardNames = {
@@ -40,17 +44,22 @@ const BoardPage = ({ boardName }) => {
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
-  const pageSize = queryParams.get("pageSize") || 10;
+  const page = parseInt(queryParams.get("page")) || 1;
+  const pageSize = parseInt(queryParams.get("pageSize")) || 10;
   const [postList, setPostList] = useState([]);
 
-  const getPostListByBoardCategory = async (page) => {
+  const [currentPage, setCurrentPage] = useState(page);
+  const [totalResults, setTotalResults] = useState();
+
+  const getPostListByBoardCategory = async () => {
     try {
       const response = await getPostsByBoardCategory(
-        page - 1,
+        currentPage - 1,
         pageSize,
         boardName
       );
       setPostList(response.content);
+      setTotalResults(response.totalElements);
     } catch (error) {
       console.log(error);
     }
@@ -58,7 +67,13 @@ const BoardPage = ({ boardName }) => {
 
   useEffect(() => {
     getPostListByBoardCategory();
-  }, [boardName]);
+  }, [boardName, currentPage]);
+
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= Math.ceil(totalResults / pageSize)) {
+      setCurrentPage(newPage);
+    }
+  };
 
   return (
     <ParentWrapper>
@@ -71,6 +86,12 @@ const BoardPage = ({ boardName }) => {
         <BoardSearch />
       </div>
       <BoardTable boardName={boardName} postList={postList} />
+      <Pagination
+        className="pagination"
+        currentPage={currentPage}
+        totalPages={Math.ceil(totalResults / pageSize)}
+        onPageChange={handlePageChange}
+      />
       {!(boardName === "notice") && <WriteButton />}
     </ParentWrapper>
   );
