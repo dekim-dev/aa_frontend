@@ -92,7 +92,7 @@ const BoardPage = ({ boardName }) => {
         totalPages={Math.ceil(totalResults / pageSize)}
         onPageChange={handlePageChange}
       />
-      {!(boardName === "notice") && <WriteButton />}
+      {boardName !== "notice" && boardName !== "best" && <WriteButton />}
     </ParentWrapper>
   );
 };

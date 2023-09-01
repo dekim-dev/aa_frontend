@@ -50,9 +50,6 @@ const StyledTable = styled.table`
 `;
 
 const WebBoardTable = ({ boardName, postList }) => {
-  const filteredPosts = posts.filter(
-    (post) => post.boardCategory === boardName
-  );
   console.log("🍒", postList);
 
   return (
@@ -75,7 +72,7 @@ const WebBoardTable = ({ boardName, postList }) => {
                   <Link to={`/post/${post.id}`}>{post.title}</Link>
                 </td>
                 <td className="nickname">{post.nickname}</td>
-                <td className="createdAt">{post.createdAt}</td>
+                <td className="createdAt">{dateFormat(post.createdAt)}</td>
                 <td className="viewCount">{post.viewCount}</td>
                 <td className="likes">{post.likes}</td>
               </tr>
@@ -132,19 +129,16 @@ const MobileWrapper = styled.div`
 `;
 
 const MobileBoardTable = ({ boardName, postList }) => {
-  const filteredPosts = posts.filter(
-    (post) => post.boardCategory === boardName
-  );
   return (
     <MobileWrapper>
       <div className="col">
-        {filteredPosts.map((post) => (
+        {postList.map((post) => (
           <Link className="map_container" to={`/post/${post.id}`} key={post.id}>
             <div>
               <p className="title">{post.title}</p>
               <div className="row">
                 <p className="nickname">{post.nickname}</p>
-                <p className="createdAt">{post.createdAt}</p>
+                <p className="createdAt">{dateFormat(post.createdAt)}</p>
                 <p className="viewCount">조회 {post.viewCount}</p>
                 <p className="likes">{post.likes}</p>
               </div>
@@ -165,3 +159,20 @@ const BoardTable = ({ boardName, postList }) => {
   return <WebBoardTable boardName={boardName} postList={postList} />;
 };
 export default BoardTable;
+
+const dateFormat = (inputDate) => {
+  // Date 객체 생성
+  const date = new Date(inputDate);
+
+  // 년, 월, 일 추출
+  const year = String(date.getFullYear()).slice(-2);
+  const month = date.getMonth() + 1;
+  const day = date.getDate();
+
+  // 월과 일을 두 자리 문자열로 변환
+  const formattedMonth = String(month).padStart(2, "0");
+  const formattedDay = String(day).padStart(2, "0");
+
+  const formattedDate = `${year}/${formattedMonth}/${formattedDay}`;
+  return formattedDate;
+};
