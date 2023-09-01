@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { posts } from "../../DummyData";
 import { Link } from "react-router-dom";
 import useWindowResize from "../../utils/useWindowResize";
+import { topics } from "../Post/PostViewer";
 
 const StyledTable = styled.table`
   margin: 0 auto;
@@ -33,6 +34,8 @@ const StyledTable = styled.table`
     white-space: nowrap;
     max-width: 300px;
     min-width: 20rem;
+    text-align: left;
+    padding-left: 1rem;
   }
   .nickname {
     overflow: hidden;
@@ -49,7 +52,7 @@ const StyledTable = styled.table`
   }
 `;
 
-const WebBoardTable = ({ boardName, postList }) => {
+const WebBoardTable = ({ postList }) => {
   console.log("🍒", postList);
 
   return (
@@ -69,6 +72,7 @@ const WebBoardTable = ({ boardName, postList }) => {
             {postList.map((post) => (
               <tr key={post.id}>
                 <td className="title">
+                  [{topics[post.topic]}]{" "}
                   <Link to={`/post/${post.id}`}>{post.title}</Link>
                 </td>
                 <td className="nickname">{post.nickname}</td>
@@ -128,14 +132,16 @@ const MobileWrapper = styled.div`
   }
 `;
 
-const MobileBoardTable = ({ boardName, postList }) => {
+const MobileBoardTable = ({ postList }) => {
   return (
     <MobileWrapper>
       <div className="col">
         {postList.map((post) => (
           <Link className="map_container" to={`/post/${post.id}`} key={post.id}>
             <div>
-              <p className="title">{post.title}</p>
+              <p className="title">
+                [{topics[post.topic]}] {post.title}
+              </p>
               <div className="row">
                 <p className="nickname">{post.nickname}</p>
                 <p className="createdAt">{dateFormat(post.createdAt)}</p>
