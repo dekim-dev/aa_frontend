@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { dateFormatWithDash } from "../../../utils/Functions";
 
 const StyledButton = styled.button`
   border: transparent;
@@ -40,7 +41,7 @@ const Modal = styled.div`
   .button_container {
     display: flex;
     gap: 1rem;
-    align-item: center;
+    align-items: center;
     justify-content: center;
   }
 
@@ -49,7 +50,7 @@ const Modal = styled.div`
     border-top: 1px solid #ececec;
     display: flex;
     gap: 1rem;
-    align-item: center;
+    align-items: center;
     justify-content: center;
   }
 
@@ -63,7 +64,7 @@ const ItemAddIcon = ({ selectedDate, handleAdd }) => {
     itemName: "",
     timeOfDay: "",
     priority: 3,
-    createdAt: selectedDate,
+    createdAt: "",
   });
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -78,17 +79,18 @@ const ItemAddIcon = ({ selectedDate, handleAdd }) => {
       itemName: "",
       timeOfDay: "",
       priority: 3,
-      createdAt: selectedDate,
+      createdAt: "",
     });
   };
 
   const handleSubmitBtn = () => {
-    handleAdd({
+    const item = {
       itemName: newItem.itemName,
       timeOfDay: newItem.timeOfDay,
       priority: newItem.priority,
-      createdAt: selectedDate,
-    });
+      createdAt: dateFormatWithDash(selectedDate),
+    };
+    handleAdd(item);
     handleCloseModal();
   };
 
