@@ -152,6 +152,7 @@ const DailyTodoList = ({ selectedDate, dailyTodoItems }) => {
         dailyTodoList.map((item) => (
           <div className="todo_item_container" key={item.id}>
             <Checkbox
+              defaultChecked={item.todoItemStatus === "DONE"}
               type="checkbox"
               onClick={() => handleUpdateStatus(item.id, item.todoItemStatus)}
             />
