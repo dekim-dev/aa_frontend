@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { logout } from "../../../service/ApiService";
 
 const DropdownMenu = styled.ul`
   position: absolute;
@@ -58,6 +59,23 @@ const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
     setDropDownView(false);
   };
 
+  const signOut = async () => {
+    const refreshToken = localStorage.getItem("REFRESH_TOKEN");
+    const requestBody = { refreshToken: refreshToken };
+
+    if (isLoggedIn) {
+      try {
+        await logout(requestBody);
+        localStorage.clear();
+        alert("로그아웃 되었습니다.");
+        window.location.replace("/");
+        console.log("✔ 로그아웃 완료");
+      } catch (error) {
+        console.error("로그아웃 중 오류 발생:", error);
+      }
+    }
+  };
+
   if (isLoggedIn) {
     return (
       <DropdownMenu>
@@ -83,10 +101,3 @@ const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
   }
 };
 export default DropdownContent;
-
-// 임시 로그아웃
-const signOut = () => {
-  localStorage.removeItem("ACCESS_TOKEN");
-  window.location.replace("/");
-  console.log("✔ 로그아웃 완료");
-};
