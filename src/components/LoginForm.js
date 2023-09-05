@@ -35,11 +35,8 @@ const LoginForm = () => {
 
     signin(requestData)
       .then((response) => {
-        alert(`${response.nickname}님 안녕하세요!`);
+        alert(`로그인 되었습니다.`);
         navigate("/");
-        console.log(response);
-        // localStorage.setItem("ACCESS_TOKEN", response.accessToken);
-        // localStorage.setItem("REFRESH_TOKEN", response.tokens.refreshToken);
       })
       .catch((error) => {
         alert("로그인에 실패했습니다.");

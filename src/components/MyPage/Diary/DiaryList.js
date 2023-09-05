@@ -1,9 +1,19 @@
+import DiaryEditor from "./DiaryEditor";
+import DiaryViewer from "./DiaryViewer";
+import styled from "styled-components";
+
+const ParentWrapper = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 const DiaryList = () => {
   return (
-    <>
-      <h3>Diary List</h3>
-      <p>이거 왜 안뜨는데?</p>
-    </>
+    <ParentWrapper>
+      <DiaryEditor />
+      <DiaryViewer />
+    </ParentWrapper>
   );
 };
 export default DiaryList;

@@ -99,7 +99,6 @@ const PostEditor = () => {
     try {
       const response = await createPost(requestData);
       console.log(response);
-      console.log(response.topic);
       navigate(`/post/${response.id}`);
     } catch (error) {
       console.error("글 등록 에러", error);

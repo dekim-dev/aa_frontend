@@ -64,7 +64,7 @@ const PostViewer = () => {
         console.log(response);
       })
       .catch((err) => {
-        console.log(err);
+        console.log("게시글 불러오기 에러", err);
       });
   }, [postId]);
 
