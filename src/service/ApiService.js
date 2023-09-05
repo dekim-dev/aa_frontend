@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "../app-config";
+import { dateFormatWithDash } from "../utils/Functions";
 
 /** ✨api사용을 위한 call 함수 */
 export const call = async (api, method, request) => {
@@ -7,6 +8,7 @@ export const call = async (api, method, request) => {
 
   if (!token) {
     // 토큰이 없을 경우 로그인 필요
+    alert("로그인이 필요합니다.");
     throw new Error("로그인이 필요합니다.");
   }
 
@@ -29,18 +31,18 @@ export const call = async (api, method, request) => {
     if (error.response && error.response.status === 401) {
       try {
         // refreshToken 호출하여 새로운 액세스 토큰 발급
-        const newAccessToken = await refreshToken(token);
-        console.log(error);
+        const newAccessToken = await refreshToken();
 
         // 새로운 액세스 토큰으로 요청 재시도
-        const response = await axios({
+        const newConfig = {
           ...config,
           headers: {
             ...config.headers,
             Authorization: `Bearer ${newAccessToken}`,
           },
-        });
+        };
 
+        const response = await axios(newConfig);
         return response.data;
       } catch (refreshError) {
         throw refreshError;
@@ -48,14 +50,14 @@ export const call = async (api, method, request) => {
     }
 
     // 다른 에러 처리
-    return Promise.reject(error.response.data);
+    return Promise.reject(error.response);
   }
 };
 
 // 회원가입
 export const signup = async (request) => {
   try {
-    const response = await axios.post(API_BASE_URL + "/signup", request); // 토큰 없이 요청 보내기
+    const response = await axios.post(API_BASE_URL + "/auth/signup", request); // 토큰 없이 요청 보내기
     return response.data;
   } catch (error) {
     return error.response.data;
@@ -65,14 +67,27 @@ export const signup = async (request) => {
 // 로그인
 export const signin = async (request) => {
   try {
-    const response = await axios.post(API_BASE_URL + "/signin", request);
+    const response = await axios.post(API_BASE_URL + "/auth/login", request);
     const token = response.data.accessToken; // 서버 응답에서 토큰 추출
     localStorage.setItem("ACCESS_TOKEN", `${token}`); // 토큰 저장
-    window.location.replace("/"); // 임시로 새로고침
+    localStorage.setItem("REFRESH_TOKEN", `${response.data.refreshToken}`);
+    console.log("📌accessToken: " + token);
+    console.log("📌refreshToken: " + response.data.refreshToken);
     console.log("✔ 로그인 완료");
     return response;
   } catch (error) {
     return error;
+  }
+};
+
+// 로그아웃
+export const logout = async (requestBody) => {
+  try {
+    // 로그아웃 API 엔드포인트 호출
+    await axios.post(API_BASE_URL + "/auth/logout", requestBody);
+  } catch (error) {
+    console.error("로그아웃 중 오류 발생:", error);
+    throw error;
   }
 };
 
@@ -92,15 +107,17 @@ axios.interceptors.response.use(
   }
 );
 
-// 📌리프레시 토큰.. 보류
-export const refreshToken = async (refreshToken) => {
+// 리프레시 토큰을 사용하여 새로운 액세스 토큰 발급
+export const refreshToken = async () => {
   try {
-    const response = await axios.post(API_BASE_URL + "/api/refresh-token", {
-      refreshToken: refreshToken,
+    const response = await axios.post(API_BASE_URL + "/auth/reissue", {
+      refreshToken: localStorage.getItem("REFRESH_TOKEN"),
+      accessToken: localStorage.getItem("ACCESS_TOKEN"),
     });
-    const newAccessToken = response.data; // 새로운 액세스 토큰
+    const newAccessToken = response.data.accessToken; // 새로운 액세스 토큰
+    console.log("✨newAccessToken: " + newAccessToken);
 
-    // 새로운 액세스 토큰을 로컬 스토리지에 저장 또는 관리
+    // 새로운 액세스 토큰을 로컬 스토리지에 저장
     localStorage.setItem("ACCESS_TOKEN", newAccessToken);
 
     return newAccessToken;
@@ -124,7 +141,9 @@ export const post = async (postId) => {
 export const createPost = async (requestData) => {
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");
-    const response = await call(`/post/`, "POST", requestData, token);
+    console.log("글쓰기 토큰: ", token);
+    const response = await call(`/post`, "POST", requestData, token);
+    console.log("글쓰기 반환: ", response);
     return response;
   } catch (error) {
     return error;
@@ -201,12 +220,12 @@ export const createTodoItem = async (todoItemDTO) => {
   }
 };
 
-// 날짜 범위에 해당하는 Todo 아이템 목록 조회
-export const getTodoItemsByDateRange = async (startDate, endDate) => {
+// 날짜에 해당하는 Todo 아이템 목록 조회
+export const getTodoItemsByDate = async (date) => {
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");
     const response = await call(
-      `/todo-item/items?startDate=${startDate.toISOString()}&endDate=${endDate.toISOString()}`,
+      `/todo-item/items?date=${dateFormatWithDash(date)}`,
       "GET",
       token
     );
@@ -252,6 +271,28 @@ export const getPostsByBoardCategory = async (
       null,
       token
     );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 다이어리 생성
+export const createDiary = async (diary) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/diary", "POST", diary, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 다이어리 조회
+export const getDiaryList = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/diary", "GET", token);
     return response;
   } catch (error) {
     throw error;

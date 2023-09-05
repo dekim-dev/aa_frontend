@@ -14,3 +14,16 @@ export const dateFormat = (inputDate) => {
   const formattedDate = `${year}/${formattedMonth}/${formattedDay}`;
   return formattedDate;
 };
+
+/** 📆todoItem용 Date객체 문자열로 변환 */
+export const dateFormatWithDash = (selectedDate) => {
+  const year = selectedDate.getFullYear();
+  const month = selectedDate.getMonth() + 1;
+  const day = selectedDate.getDate();
+  const dateString = `${year}-${month.toString().padStart(2, "0")}-${day
+    .toString()
+    .padStart(2, "0")}`;
+  console.log("📆: ", dateString);
+
+  return dateString;
+};
