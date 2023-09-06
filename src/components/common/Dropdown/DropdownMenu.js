@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { logout } from "../../../service/ApiService";
+import { useContext } from "react";
+import { UserContext } from "../../../context/UserContext";
 
 const DropdownMenu = styled.ul`
   position: absolute;
@@ -55,6 +57,8 @@ const StyledLink = styled(Link)`
 `;
 
 const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
+  const { setUserPfImg, setUserId, setIsLogin } = useContext(UserContext);
+
   const handleLinkClick = () => {
     setDropDownView(false);
   };
@@ -68,6 +72,9 @@ const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
         await logout(requestBody);
         localStorage.clear();
         alert("로그아웃 되었습니다.");
+        setUserPfImg(null);
+        setUserId(null);
+        setIsLogin(false);
         window.location.replace("/");
         console.log("✔ 로그아웃 완료");
       } catch (error) {

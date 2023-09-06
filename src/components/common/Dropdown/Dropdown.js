@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import ProfileImg from "../../../assets/images/profile.jpeg";
 import NonMember from "../../../assets/images/nonMemberImg.svg";
 import DropdownContent from "./DropdownMenu";
+import { getUserInfo } from "../../../service/ApiService";
+import { UserContext } from "../../../context/UserContext";
 
 const DropDownWrapper = styled.div`
   position: relative;
@@ -32,41 +33,44 @@ const ProfileIcon = styled.img`
   }
 `;
 const DropDown = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState();
-  const ATK = localStorage.getItem("ACCESS_TOKEN");
   const [dropDownView, setDropDownView] = useState(false);
-  console.log(ATK);
+
+  const { userPfImg, setUserId, setUserPfImg, setIsLogin, isLogin } =
+    useContext(UserContext);
 
   useEffect(() => {
-    if (ATK === null || ATK === undefined) {
-      setIsLoggedIn(false);
-    } else {
-      setIsLoggedIn(true);
-    }
-
-    console.log("isLoggedIn 렌더링");
-  }, [ATK]);
+    const getUserInformation = async () => {
+      try {
+        const response = await getUserInfo();
+        setUserId(response.id);
+        setUserPfImg(response.pfImg);
+        setIsLogin(true);
+        console.log(response);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserInformation();
+  }, [setUserId, setUserPfImg, setIsLogin]);
 
   return (
     <DropDownWrapper>
-      <div>
-        {isLoggedIn ? (
-          <ProfileIcon
-            src={ProfileImg}
-            alt="userImg"
-            onClick={() => setDropDownView(!dropDownView)}
-          />
-        ) : (
-          <ProfileIcon
-            src={NonMember}
-            alt="nonUserImg"
-            onClick={() => setDropDownView(!dropDownView)}
-          />
-        )}
-      </div>
+      {!isLogin ? (
+        <ProfileIcon
+          src={NonMember}
+          alt="nonUserImg"
+          onClick={() => setDropDownView(!dropDownView)}
+        />
+      ) : (
+        <ProfileIcon
+          src={userPfImg}
+          alt="userImg"
+          onClick={() => setDropDownView(!dropDownView)}
+        />
+      )}
       {dropDownView && (
         <DropdownContent
-          isLoggedIn={isLoggedIn}
+          isLoggedIn={isLogin}
           setDropDownView={() => setDropDownView(!dropDownView)}
         />
       )}

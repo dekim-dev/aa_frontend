@@ -11,6 +11,7 @@ import BoardPage from "./pages/BoardPage";
 import ClinicListPage from "./pages/ClinicListPage";
 import ClinicDetailPage from "./pages/ClinicDetailPage";
 import MyPage from "./pages/MyPage";
+import UserStore from "./context/UserContext";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -32,7 +33,7 @@ const GlobalStyle = createGlobalStyle`
 
 function App() {
   return (
-    <>
+    <UserStore>
       <GlobalStyle />
       <Router>
         <NavBar />
@@ -54,7 +55,7 @@ function App() {
           <Route path="/mypage/*" element={<MyPage />} />
         </Routes>
       </Router>
-    </>
+    </UserStore>
   );
 }
 

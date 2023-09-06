@@ -1,9 +1,10 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import InputField from "./common/TextField";
 import Button from "./common/Button";
 import styled from "styled-components";
-import { signin } from "../service/ApiService";
+import { signin, getUserInfo } from "../service/ApiService";
 import { useNavigate } from "react-router-dom";
+import { UserContext } from "../context/UserContext";
 
 const ParentWrapper = styled.div`
   width: 80%;
@@ -20,6 +21,8 @@ const LoginForm = () => {
     pwd: "",
   });
 
+  const { setUserPfImg, setUserId, setIsLogin } = useContext(UserContext);
+
   const handleChangeState = (e) => {
     setState({
       ...state,
@@ -27,21 +30,30 @@ const LoginForm = () => {
     });
   };
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     const requestData = {
       email: state.email,
       password: state.pwd,
     };
 
-    signin(requestData)
-      .then((response) => {
-        alert(`로그인 되었습니다.`);
-        navigate("/");
-      })
-      .catch((error) => {
-        alert("로그인에 실패했습니다.");
-        console.error("Error signing up:", error);
-      });
+    try {
+      const response = await signin(requestData);
+      alert(`로그인 되었습니다.`);
+      console.log("로그인 response: ", response);
+
+      // 프로필 정보를 가져오고 UserContext를 업데이트
+      const userInfo = await getUserInfo();
+      setUserId(userInfo.id);
+      setUserPfImg(userInfo.pfImg);
+      setIsLogin(true);
+      console.log(userInfo);
+      console.log(UserContext);
+
+      navigate("/");
+    } catch (error) {
+      alert("로그인에 실패했습니다.");
+      console.error("Error signing up:", error);
+    }
   };
 
   const enterKeyEventHandler = (e) => {
@@ -82,4 +94,5 @@ const LoginForm = () => {
     </ParentWrapper>
   );
 };
+
 export default LoginForm;

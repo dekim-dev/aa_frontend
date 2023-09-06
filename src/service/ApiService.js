@@ -298,3 +298,14 @@ export const getDiaryList = async () => {
     throw error;
   }
 };
+
+// 회원 정보 조회 (UserContext저장용)
+export const getUserInfo = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/main/userInfo", "GET", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
