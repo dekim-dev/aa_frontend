@@ -309,3 +309,33 @@ export const getUserInfo = async () => {
     throw error;
   }
 };
+
+// 글 수정
+export const updatePost = async (requestData) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/post/edit`, "PUT", requestData, token);
+    console.log("글수정 성공: ", response);
+    return response;
+  } catch (error) {
+    console.log("글수정 실패: ", error);
+    return error;
+  }
+};
+
+// 글 삭제
+export const deletePost = async (postId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/post/delete?postId=${postId}`,
+      "DELETE",
+      token
+    );
+    console.log("글삭제 성공: ", response);
+    return response;
+  } catch (error) {
+    console.log("글삭제 실패: ", error);
+    return error;
+  }
+};

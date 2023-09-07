@@ -1,7 +1,7 @@
-const FreeBoardTopics = ({ onChange }) => {
+const FreeBoardTopics = ({ onChange, selectedTopic }) => {
   return (
     <>
-      <select onChange={onChange}>
+      <select onChange={onChange} value={selectedTopic}>
         <option defaultChecked value={""}>
           말머리 선택
         </option>
@@ -14,10 +14,10 @@ const FreeBoardTopics = ({ onChange }) => {
   );
 };
 
-const QnABoardTopics = ({ onChange }) => {
+const QnABoardTopics = ({ onChange, selectedTopic }) => {
   return (
     <>
-      <select onChange={onChange}>
+      <select onChange={onChange} value={selectedTopic}>
         <option defaultChecked value={""}>
           말머리 선택
         </option>

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { createPost } from "../../service/ApiService";
+import { createPost, updatePost } from "../../service/ApiService";
 import { FreeBoardTopics, QnABoardTopics } from "./TopicSelectBox";
 import { useNavigate } from "react-router-dom";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -51,11 +51,11 @@ const StyledButton = styled.button`
   height: 2rem;
 `;
 
-const BoardSelectBox = ({ onChange }) => {
+const BoardSelectBox = ({ onChange, selectedBoard }) => {
   return (
     <>
-      <select onChange={onChange}>
-        <option defaultChecked>게시판 선택</option>
+      <select onChange={onChange} value={selectedBoard}>
+        <option value={""}>게시판 선택</option>
         <option value={"free"}>자유게시판</option>
         <option value={"qna"}>질문게시판</option>
       </select>
@@ -63,7 +63,7 @@ const BoardSelectBox = ({ onChange }) => {
   );
 };
 
-const PostEditor = () => {
+const PostEditor = ({ isEdit, originalData }) => {
   const navigate = useNavigate();
   const [selectedBoard, setSelectedBoard] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
@@ -81,11 +81,19 @@ const PostEditor = () => {
     setSelectedTopic(e.target.value);
   };
 
-  const handleChangeState = (e) => {
+  const handleChange = (e, name) => {
     setState({
       ...state,
-      [e.target.name]: e.target.value,
+      [name]: e.target.value,
     });
+  };
+
+  const handleEditorChange = (event, editor) => {
+    const data = editor.getData();
+    setState((prevState) => ({
+      ...prevState,
+      content: data,
+    }));
   };
 
   const handleSubmit = async () => {
@@ -95,24 +103,57 @@ const PostEditor = () => {
       title: state.title,
       content: state.content,
     };
-
+    if (isEdit) {
+      // 글 수정일 경우 id만 추가
+      requestData.id = originalData.post.id;
+    }
     try {
-      const response = await createPost(requestData);
-      console.log(response);
-      navigate(`/post/${response.id}`);
+      if (isEdit) {
+        // 글 수정일 경우 updatePost 함수 호출
+        const response = await updatePost(requestData, originalData.post.id);
+        console.log("글 수정 성공: ", response);
+        navigate(`/post/${response.id}`, { replace: true });
+      } else {
+        // 글 등록일 경우 createPost 함수 호출
+        const response = await createPost(requestData);
+        console.log("글 등록 성공: ", response);
+        navigate(`/post/${response.id}`, { replace: true });
+      }
     } catch (error) {
-      console.error("글 등록 에러", error);
+      console.error("글 작성 또는 수정 실패: ", error);
     }
   };
+
+  useEffect(() => {
+    // isEdit이 들어올때만 동작하는 useEffect
+    if (isEdit && originalData) {
+      setSelectedBoard(originalData.post.boardCategory);
+      setSelectedTopic(originalData.post.topic);
+      setState({
+        title: originalData.post.title,
+        content: originalData.post.content,
+      });
+    }
+  }, [isEdit, originalData]);
+
   return (
     <ParentWrapper>
       <SelectBoxContainer>
-        <BoardSelectBox onChange={handleBoardChange} />
+        <BoardSelectBox
+          onChange={handleBoardChange}
+          selectedBoard={selectedBoard}
+        />
         {selectedBoard === "free" && (
-          <FreeBoardTopics onChange={handleTopicChange} />
+          <FreeBoardTopics
+            onChange={handleTopicChange}
+            selectedTopic={selectedTopic}
+          />
         )}
         {selectedBoard === "qna" && (
-          <QnABoardTopics onChange={handleTopicChange} />
+          <QnABoardTopics
+            onChange={handleTopicChange}
+            selectedTopic={selectedTopic}
+          />
         )}
       </SelectBoxContainer>
       <StyledTextField
@@ -120,25 +161,22 @@ const PostEditor = () => {
         type="text"
         name="title"
         value={state.title}
-        onChange={handleChangeState}
+        onChange={(e) => handleChange(e, "title")}
         width="250px"
         placeholder="글 제목을 입력하세요"
       />
       <StyledCkEditor>
         <CKEditor
           editor={ClassicEditor}
-          data="<p>내용을 입력하세요.</p>"
-          onChange={(event, editor) => {
-            const data = editor.getData();
-            console.log({ event, editor, data });
-            setState({
-              ...state,
-              content: data,
-            });
-          }}
+          data={state.content} // 초기 데이터 설정
+          onChange={handleEditorChange}
         />
       </StyledCkEditor>
-      <StyledButton onClick={handleSubmit}>등 록</StyledButton>
+      {isEdit ? (
+        <StyledButton onClick={handleSubmit}>수 정</StyledButton>
+      ) : (
+        <StyledButton onClick={handleSubmit}>등 록</StyledButton>
+      )}
     </ParentWrapper>
   );
 };

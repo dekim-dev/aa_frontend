@@ -10,3 +10,8 @@ export const useAuthStore = create((set) => ({
     set({ user: null });
   },
 }));
+
+export const usePostStore = create((set) => ({
+  post: null,
+  setPost: (postData) => set({ post: postData }),
+}));

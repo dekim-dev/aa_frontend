@@ -12,6 +12,7 @@ import ClinicListPage from "./pages/ClinicListPage";
 import ClinicDetailPage from "./pages/ClinicDetailPage";
 import MyPage from "./pages/MyPage";
 import UserStore from "./context/UserContext";
+import PostEditPage from "./pages/PostEditPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -43,6 +44,7 @@ function App() {
           <Route path="/signup" element={<JoinPage />} />
           <Route path="/post" element={<PostWritePage />} />
           <Route path="/post/:postId" element={<PostPage />} />
+          <Route path="/post/edit/:postId" element={<PostEditPage />} />
           <Route path="/board/free" element={<BoardPage boardName="free" />} />
           <Route path="/board/qna" element={<BoardPage boardName="qna" />} />
           <Route path="/board/best" element={<BoardPage boardName="best" />} />
