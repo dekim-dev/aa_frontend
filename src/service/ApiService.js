@@ -339,3 +339,20 @@ export const deletePost = async (postId) => {
     return error;
   }
 };
+
+// 조회수 증가
+export const increaseViewCount = async (postId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/post/view-count?postId=${postId}`,
+      "PUT",
+      token
+    );
+    console.log("조회수 증가 성공: ", response);
+    return response;
+  } catch (error) {
+    console.log("조회수 증가 실패: ", error);
+    return error;
+  }
+};

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { deletePost, post } from "../../service/ApiService";
+import { deletePost, increaseViewCount, post } from "../../service/ApiService";
 import { dateFormat } from "../../utils/Functions";
 import { styled } from "styled-components";
 import { UserContext } from "../../context/UserContext";
@@ -81,9 +81,14 @@ const PostViewer = () => {
   const postStore = usePostStore(); // 게시글 저장
 
   useEffect(() => {
-    console.log("postId: ", postId);
-    post(postId)
-      .then((response) => {
+    const fetchData = async () => {
+      // 먼저 조회수 증가를 처리
+      await increaseViewCount(postId);
+      console.log("postId: ", postId);
+
+      // 그 다음에 게시글 데이터를 가져옴
+      try {
+        const response = await post(postId);
         setPostData(response);
         postStore.setPost({ post: response });
         console.log(postStore);
@@ -92,10 +97,12 @@ const PostViewer = () => {
         if (userId === response.userId) {
           setCanEdit(true);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.log("게시글 불러오기 에러", err);
-      });
+      }
+    };
+
+    fetchData(); // fetchData 함수 호출
   }, [postId, userId]);
 
   const handleDelete = async () => {
@@ -140,7 +147,12 @@ const PostViewer = () => {
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: postData.content }}
-          />{" "}
+          />
+          {!canEdit && (
+            <div className="edit_delete_wrapper">
+              <button>👍🏻</button>
+            </div>
+          )}
           {canEdit && (
             <div className="edit_delete_wrapper">
               <Link to={`/post/edit/${postId}`}>
