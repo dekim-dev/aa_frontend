@@ -65,7 +65,7 @@ const WebBoardTable = ({ postList }) => {
               <th>글쓴이</th>
               <th>작성일</th>
               <th>조회수</th>
-              <th>추천</th>
+              <th>좋아요</th>
             </tr>
           </thead>
           <tbody>
@@ -78,7 +78,7 @@ const WebBoardTable = ({ postList }) => {
                 <td className="nickname">{post.nickname}</td>
                 <td className="createdAt">{dateFormat(post.createdAt)}</td>
                 <td className="viewCount">{post.viewCount}</td>
-                <td className="likes">{post.likes}</td>
+                <td className="likes">{post.likesCount}</td>
               </tr>
             ))}
           </tbody>
@@ -146,7 +146,7 @@ const MobileBoardTable = ({ postList }) => {
                 <p className="nickname">{post.nickname}</p>
                 <p className="createdAt">{dateFormat(post.createdAt)}</p>
                 <p className="viewCount">조회 {post.viewCount}</p>
-                <p className="likes">{post.likes}</p>
+                <p className="likes">{post.likesCount}</p>
               </div>
             </div>
           </Link>
