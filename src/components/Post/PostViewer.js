@@ -1,6 +1,11 @@
 import React, { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { deletePost, increaseViewCount, post } from "../../service/ApiService";
+import {
+  createDeleteLikes,
+  deletePost,
+  increaseViewCount,
+  post,
+} from "../../service/ApiService";
 import { dateFormat } from "../../utils/Functions";
 import { styled } from "styled-components";
 import { UserContext } from "../../context/UserContext";
@@ -119,6 +124,16 @@ const PostViewer = () => {
     }
   };
 
+  const handleClickLikes = async () => {
+    const likesDTO = { postId: postId };
+    const response = await createDeleteLikes(likesDTO);
+    if (response.added) {
+      alert("좋아요를 눌렀습니다.");
+    } else {
+      alert("좋아요를 취소하였습니다.");
+    }
+  };
+
   return (
     <Wrapper>
       {postData && (
@@ -142,7 +157,7 @@ const PostViewer = () => {
             </div>
             <p>{dateFormat(postData.createdAt)}</p>
             <p>조회수 {postData.viewCount}</p>
-            <p>좋아요 {postData.likes}</p>
+            <p>좋아요 {postData.likesCount}</p>
           </div>
           <div
             className="content"
@@ -150,7 +165,7 @@ const PostViewer = () => {
           />
           {!canEdit && (
             <div className="edit_delete_wrapper">
-              <button>👍🏻</button>
+              <button onClick={handleClickLikes}>👍🏻</button>
             </div>
           )}
           {canEdit && (

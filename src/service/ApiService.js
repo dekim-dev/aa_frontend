@@ -356,3 +356,16 @@ export const increaseViewCount = async (postId) => {
     return error;
   }
 };
+
+// 좋아요 클릭
+export const createDeleteLikes = async (likesDTO) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/likes`, "POST", likesDTO, token);
+    console.log("좋아요 api 성공: ", response);
+    return response;
+  } catch (error) {
+    console.log("좋아요 api 실패: ", error);
+    return error;
+  }
+};
