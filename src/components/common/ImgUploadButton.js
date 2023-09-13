@@ -1,6 +1,7 @@
-import { ref, getDownloadURL, uploadBytes } from "firebase/storage";
-import { storage } from "../../firebase";
 import { useState } from "react";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../firebase";
+import Resizer from "react-image-file-resizer";
 import { styled } from "styled-components";
 
 const ImgContainer = styled.img`
@@ -9,45 +10,62 @@ const ImgContainer = styled.img`
 `;
 
 const ImgUploadButton = ({ userId, postId }) => {
-  const [imgURL, setImgURL] = useState("");
   const [selectedImg, setSelectedImg] = useState(null);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [previewImgUrl, setPreviewImgUrl] = useState("");
+  const [downloadedImgUrl, setDownloadedImgUrl] = useState("");
 
+  // 이미지가 변경될 때 호출되는 함수
   const onImageChange = (e) => {
     e.preventDefault();
-    const file = e.target.files[0];
-    if (!file) return;
+    const file = e.target.files[0]; // 업로드할 파일을 가져옴
 
-    setSelectedImg(file);
-    console.log("📌selectedImg: ", selectedImg);
+    if (!file) return; // 파일이 없으면 함수 종료
 
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      setImgURL(e.target.result);
-    };
-    reader.readAsDataURL(file);
+    const maxWidth = 200;
+
+    // 이미지 리사이징
+    Resizer.imageFileResizer(
+      file,
+      maxWidth,
+      maxWidth * (file.height / file.width),
+      "JPEG", // 리사이즈된 이미지 형식 (JPEG)
+      80, // 이미지 품질 (0-100)
+      0, // 회전 각도 (0도)
+      (uriBlob) => {
+        const uri = URL.createObjectURL(uriBlob); // Blob을 Data URL로 변환
+        setSelectedImg(uriBlob); // 선택한 이미지를 상태에 설정
+        setPreviewImgUrl(uri); // 리사이징된 이미지 URL을 상태에 설정 (미리보기)
+      },
+      "blob" // Blob 형식으로 리사이징
+    );
   };
 
+  // 이미지 업로드 처리 함수
   const handleUpload = () => {
+    if (!selectedImg) return; // 선택한 이미지가 없으면 함수 종료
+
+    // 이미지를 Firebase Storage에 업로드하기 위한 참조 만들기
     const storageRef = ref(
       storage,
-      `user_pfImg/userId_${userId}_${selectedImg.name}`
+      `user_pfImg/0${userId}_${
+        selectedImg.name
+      }_${new Date().getFullYear()}${new Date().getMonth()}${new Date().getDate()}${new Date().getHours()}${new Date().getMinutes()}${new Date().getMilliseconds()}`
     );
-    // 유저 프로필사진 저장
+
+    // 이미지 업로드 작업
     const uploadTask = uploadBytes(storageRef, selectedImg);
 
+    // 이미지 업로드 작업 완료 후 처리
     uploadTask.then((snapshot) => {
-      setSelectedImg(null);
-      setImgURL("");
+      setSelectedImg(null); // 선택한 이미지 상태 초기화
+      // 업로드된 이미지의 다운로드 URL 가져오기
       getDownloadURL(snapshot.ref).then((downloadURL) => {
-        console.log("File available at ", downloadURL);
-
-        // URL에서 토큰 이전 부분만 추출
-        const baseUrl = downloadURL.split("?alt=media")[0] + "?alt=media";
-        console.log("Media URL: ", baseUrl);
-
-        setImgURL(baseUrl);
-        setUploadMessage("업로드 완료되었습니다!");
+        const baseUrl = downloadURL.split("?alt=media")[0] + "?alt=media"; // token부분 잘라내기
+        setDownloadedImgUrl(baseUrl);
+        setUploadMessage("업로드가 완료되었습니다!");
+        console.log(downloadedImgUrl);
+        setPreviewImgUrl("");
       });
     });
   };
@@ -55,7 +73,10 @@ const ImgUploadButton = ({ userId, postId }) => {
   return (
     <>
       <input type="file" onChange={onImageChange} />
-      {imgURL && <ImgContainer src={imgURL} alt="Uploaded" />}
+      {previewImgUrl && <ImgContainer src={previewImgUrl} alt="Preview" />}
+      {downloadedImgUrl && (
+        <ImgContainer src={downloadedImgUrl} alt="Uploaded" />
+      )}
       {selectedImg && <button onClick={handleUpload}>Upload</button>}
       {uploadMessage && <p>{uploadMessage}</p>}
     </>
