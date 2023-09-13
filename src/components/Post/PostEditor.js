@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { createPost, updatePost } from "../../service/ApiService";
 import { FreeBoardTopics, QnABoardTopics } from "./TopicSelectBox";
 import { useNavigate } from "react-router-dom";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import MyEditor from "./CkEditor5";
+import { UserContext } from "../../context/UserContext";
 
 const ParentWrapper = styled.div`
   margin: 0 auto;
@@ -67,10 +67,12 @@ const PostEditor = ({ isEdit, originalData }) => {
   const navigate = useNavigate();
   const [selectedBoard, setSelectedBoard] = useState("");
   const [selectedTopic, setSelectedTopic] = useState("");
+  const [editor, setEditor] = useState("글 내용을 입력하세요");
+  const { userId } = useContext(UserContext);
 
   const [state, setState] = useState({
     title: "",
-    content: "",
+    // content: "",
   });
 
   const handleBoardChange = (e) => {
@@ -88,20 +90,12 @@ const PostEditor = ({ isEdit, originalData }) => {
     });
   };
 
-  const handleEditorChange = (event, editor) => {
-    const data = editor.getData();
-    setState((prevState) => ({
-      ...prevState,
-      content: data,
-    }));
-  };
-
   const handleSubmit = async () => {
     const requestData = {
       boardCategory: selectedBoard,
       topic: selectedTopic,
       title: state.title,
-      content: state.content,
+      content: editor,
     };
     if (isEdit) {
       // 글 수정일 경우 id만 추가
@@ -133,6 +127,7 @@ const PostEditor = ({ isEdit, originalData }) => {
         title: originalData.post.title,
         content: originalData.post.content,
       });
+      setEditor(originalData.post.content);
     }
   }, [isEdit, originalData]);
 
@@ -166,10 +161,12 @@ const PostEditor = ({ isEdit, originalData }) => {
         placeholder="글 제목을 입력하세요"
       />
       <StyledCkEditor>
-        <CKEditor
-          editor={ClassicEditor}
-          data={state.content} // 초기 데이터 설정
-          onChange={handleEditorChange}
+        <MyEditor
+          userId={userId}
+          handleChange={(data) => {
+            setEditor(data);
+          }}
+          data={editor}
         />
       </StyledCkEditor>
       {isEdit ? (

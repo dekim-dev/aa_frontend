@@ -47,8 +47,37 @@ const ParentWrapper = styled.div`
   .content {
     border: 1px solid #ececec;
     width: 100%;
-    height: 40rem;
+    min-height: 40rem;
     padding: 0.4rem;
+
+    image {
+    }
+    .image-style-side {
+      float: right;
+    }
+    figure.image {
+      margin: 0.9em auto;
+      text-align: center;
+      max-width: 90%;
+    }
+    .image.image_resized {
+      display: block;
+      box-sizing: border-box;
+    }
+    .image.image_resized img {
+      width: 100%;
+    }
+
+    .image.image_resized > figcaption {
+      display: block;
+      caption-side: bottom;
+      word-break: break-word;
+      color: gray;
+      background-color: #ececec;
+      padding: 0.6em;
+      font-size: 0.75em;
+      outline-offset: -1px;
+    }
   }
   .edit_delete_wrapper {
     align-self: flex-end;
@@ -163,6 +192,7 @@ const PostViewer = () => {
             className="content"
             dangerouslySetInnerHTML={{ __html: postData.content }}
           />
+
           {!canEdit && (
             <div className="edit_delete_wrapper">
               <button onClick={handleClickLikes}>👍🏻</button>
