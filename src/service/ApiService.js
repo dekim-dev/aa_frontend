@@ -369,3 +369,46 @@ export const createDeleteLikes = async (likesDTO) => {
     return error;
   }
 };
+
+//댓글 작성
+export const createComment = async (requestData, postId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/post/${postId}/comment`,
+      "POST",
+      requestData,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+//댓글 수정
+export const updateComment = async (commentId, requestData) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/post/${commentId}/comment`,
+      "PUT",
+      requestData,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+//댓글 삭제
+export const deleteComment = async (commentId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/post/${commentId}/comment`, "DELETE", token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
