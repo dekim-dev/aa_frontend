@@ -1,14 +1,8 @@
-import React, { useState, useEffect, useContext } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import {
-  createDeleteLikes,
-  deletePost,
-  increaseViewCount,
-  post,
-} from "../../service/ApiService";
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { createDeleteLikes, deletePost } from "../../service/ApiService";
 import { dateFormat } from "../../utils/Functions";
 import { styled } from "styled-components";
-import { UserContext } from "../../context/UserContext";
 import MyButton from "./MyButton";
 import { usePostStore } from "../../store";
 
@@ -105,39 +99,9 @@ export const topics = {
   etc: "기타",
 };
 
-const PostViewer = () => {
+const PostViewer = ({ postData, canEdit, postId }) => {
   const navigate = useNavigate();
-  const { postId } = useParams();
-  const { userId } = useContext(UserContext);
-  const [postData, setPostData] = useState({});
-  const [canEdit, setCanEdit] = useState(false); // 수정 및 삭제 버튼을 표시할 변수 추가
-
-  const postStore = usePostStore(); // 게시글 저장
-
-  useEffect(() => {
-    const fetchData = async () => {
-      // 먼저 조회수 증가를 처리
-      await increaseViewCount(postId);
-      console.log("postId: ", postId);
-
-      // 그 다음에 게시글 데이터를 가져옴
-      try {
-        const response = await post(postId);
-        setPostData(response);
-        postStore.setPost({ post: response });
-        console.log(postStore);
-        console.log(response);
-        // userId와 response.userId를 비교하여 수정&삭제 버튼을 표시할지 결정
-        if (userId === response.userId) {
-          setCanEdit(true);
-        }
-      } catch (err) {
-        console.log("게시글 불러오기 에러", err);
-      }
-    };
-
-    fetchData(); // fetchData 함수 호출
-  }, [postId, userId]);
+  const { post } = usePostStore();
 
   const handleDelete = async () => {
     if (window.confirm(`정말 삭제하시겠습니까?`)) {
@@ -145,8 +109,8 @@ const PostViewer = () => {
         const response = await deletePost(postId);
         console.log(postId);
         console.log("글 삭제 성공", response);
-        console.log(postStore);
-        navigate(`/board/${postStore.post.post.boardCategory}`);
+        console.log(post);
+        navigate(`/board/${post.post.boardCategory}`);
       } catch (error) {
         console.log("글 삭제 실패", error);
       }
