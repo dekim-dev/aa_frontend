@@ -1,6 +1,4 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { getClinicInfoById } from "../../../service/ApiService";
+import { useState } from "react";
 import styled from "styled-components";
 import OpenHours from "./OpenHours";
 
@@ -25,32 +23,8 @@ const RotatableArrow = styled.span`
   display: inline-block;
 `;
 
-const ClinicInfo = ({ setKakaoMapInfo }) => {
-  const { clinicId } = useParams();
-  const [clinicInfo, setClinicInfo] = useState({});
-  const [schedule, setSchedule] = useState([]);
+const ClinicInfo = ({ clinicInfo, schedule }) => {
   const [toggleSchedule, setToggleSchedule] = useState(false);
-
-  const getClinicInfo = async () => {
-    try {
-      const response = await getClinicInfoById(clinicId);
-      console.log(response);
-      setClinicInfo(response);
-      setSchedule(response.scheduleJson);
-
-      setKakaoMapInfo({
-        latitude: response.latitude,
-        longitude: response.longitude,
-        name: response.name,
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  useEffect(() => {
-    getClinicInfo();
-  }, []);
 
   const handleClickSchedule = () => {
     setToggleSchedule(!toggleSchedule);
