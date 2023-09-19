@@ -22,6 +22,7 @@ const ParentContainer = styled.div`
 const RotatableArrow = styled.span`
   transition: transform 0.3s ease-in-out;
   transform: ${(props) => (props.rotate ? "rotate(180deg)" : "rotate(0deg)")};
+  display: inline-block;
 `;
 
 const ClinicInfo = ({ setKakaoMapInfo }) => {
@@ -33,6 +34,7 @@ const ClinicInfo = ({ setKakaoMapInfo }) => {
   const getClinicInfo = async () => {
     try {
       const response = await getClinicInfoById(clinicId);
+      console.log(response);
       setClinicInfo(response);
       setSchedule(response.scheduleJson);
 
@@ -62,11 +64,12 @@ const ClinicInfo = ({ setKakaoMapInfo }) => {
           <p>설명 : {clinicInfo.info}</p>
           <p>주소 : {clinicInfo.address}</p>
           <p>전화번호 : {clinicInfo.tel}</p>
-          <p onClick={handleClickSchedule}>
-            <div className="toggle_schedule">
-              진료시간보기{" "}
-              <RotatableArrow rotate={toggleSchedule}>🕰️</RotatableArrow>
-            </div>
+          <p
+            className="toggle_schedule"
+            onClick={handleClickSchedule}
+            rotate={toggleSchedule.toString()}
+          >
+            진료시간보기 <RotatableArrow>🕰️</RotatableArrow>
           </p>
           {toggleSchedule && <OpenHours schedule={schedule} />}
         </ParentContainer>
