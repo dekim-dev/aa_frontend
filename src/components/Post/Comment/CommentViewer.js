@@ -1,5 +1,10 @@
 import { styled } from "styled-components";
-import { deleteComment, updateComment } from "../../../service/ApiService";
+import {
+  deleteClinicComment,
+  deleteComment,
+  updateClinicComment,
+  updateComment,
+} from "../../../service/ApiService";
 import { useState } from "react";
 
 const ParentWrapper = styled.div`
@@ -30,6 +35,7 @@ const ParentWrapper = styled.div`
 
 const CommentViewer = ({
   commentData,
+  clinicId,
   postId,
   userId,
   onCommentDelete,
@@ -55,9 +61,21 @@ const CommentViewer = ({
 
   const handleSaveEdit = async (commentId) => {
     try {
-      const response = await updateComment(commentId, editedContent[commentId]);
-      console.log(response);
-      alert("댓글이 수정되었습니다.");
+      if (postId != null) {
+        const response = await updateComment(
+          commentId,
+          editedContent[commentId]
+        );
+        console.log(response);
+        alert("댓글이 수정되었습니다.");
+      } else if (clinicId != null) {
+        const response = await updateClinicComment(
+          commentId,
+          editedContent[commentId]
+        );
+        console.log(response);
+        alert("댓글이 수정되었습니다.");
+      }
 
       setEditMode((prevEditMode) => ({
         // 수정모드 초기화
@@ -78,10 +96,17 @@ const CommentViewer = ({
 
   const handleClickDeleteBtn = async (commentId) => {
     try {
-      const response = await deleteComment(commentId);
-      console.log(response);
-      alert("댓글이 삭제되었습니다.");
-      onCommentDelete(commentId);
+      if (postId != null) {
+        const response = await deleteComment(commentId);
+        console.log(response);
+        alert("댓글이 삭제되었습니다.");
+        onCommentDelete(commentId);
+      } else if (clinicId != null) {
+        const response = await deleteClinicComment(commentId);
+        console.log(response);
+        alert("댓글이 삭제되었습니다.");
+        onCommentDelete(commentId);
+      }
     } catch (error) {
       console.log(error);
     }

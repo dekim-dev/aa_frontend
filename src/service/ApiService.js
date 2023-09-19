@@ -412,3 +412,50 @@ export const deleteComment = async (commentId) => {
     return error;
   }
 };
+
+// 클리닉 댓글 작성
+export const createClinicComment = async (requestData, clinicId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/${clinicId}/comment`,
+      "POST",
+      requestData,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+// 클리닉 댓글 수정
+export const updateClinicComment = async (commentId, requestData) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/${commentId}/comment`,
+      "PUT",
+      requestData,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+// 클리닉 댓글 삭제
+export const deleteClinicComment = async (commentId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/${commentId}/comment`,
+      "DELETE",
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

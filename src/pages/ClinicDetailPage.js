@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import ClinicInfo from "../components/Clinic/Detail/ClinicInfo";
 import KakaoMap from "../components/Clinic/Detail/KakaoMap";
@@ -6,6 +6,7 @@ import CommentViewer from "../components/Post/Comment/CommentViewer";
 import CommentEditor from "../components/Post/Comment/CommentEditor";
 import { useParams } from "react-router-dom";
 import { getClinicInfoById } from "../service/ApiService";
+import { UserContext } from "../context/UserContext";
 
 const ParentWrapper = styled.div`
   width: 100%;
@@ -27,9 +28,12 @@ const ParentWrapper = styled.div`
 
 const ClinicDetailPage = () => {
   const { clinicId } = useParams();
+  const { userId } = useContext(UserContext);
   const [clinicInfo, setClinicInfo] = useState({});
   const [schedule, setSchedule] = useState();
   const [kakaoMapInfo, setKakaoMapInfo] = useState({});
+  const [canEdit, setCanEdit] = useState(false);
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const getClinicInfo = async () => {
@@ -38,7 +42,7 @@ const ClinicDetailPage = () => {
         console.log(response);
         setClinicInfo(response);
         setSchedule(response.scheduleJson);
-
+        setComments(response.commentDTOs);
         setKakaoMapInfo({
           latitude: response.latitude,
           longitude: response.longitude,
@@ -51,6 +55,30 @@ const ClinicDetailPage = () => {
     getClinicInfo();
   }, [clinicId]);
 
+  /* 댓글 리스트 업데이트를 위한 함수들 */
+  // 댓글 추가
+  const addComment = (newComment) => {
+    setComments((prevComments) => [...prevComments, newComment]);
+  };
+
+  // 댓글 삭제
+  const deleteCommentAndUpdateList = (commentId) => {
+    setComments((prevComments) =>
+      prevComments.filter((comment) => comment.id !== commentId)
+    );
+  };
+
+  // 댓글 수정
+  const handleCommentUpdate = (commentId, updatedContent) => {
+    setComments((prevComments) =>
+      prevComments.map((comment) =>
+        comment.id === commentId
+          ? { ...comment, content: updatedContent }
+          : comment
+      )
+    );
+  };
+
   return (
     <ParentWrapper>
       <section>
@@ -62,8 +90,18 @@ const ClinicDetailPage = () => {
         <KakaoMap {...kakaoMapInfo} />
       </section>
       <div className="comment_wrapper">
-        {/* <CommentViewer /> */}
-        <CommentEditor />
+        <CommentViewer
+          commentData={comments}
+          clinicId={clinicId}
+          userId={userId}
+          onCommentDelete={deleteCommentAndUpdateList}
+          onCommentUpdate={handleCommentUpdate}
+        />
+        <CommentEditor
+          clinicId={clinicId}
+          userId={userId}
+          onCommentAdd={addComment}
+        />
       </div>
     </ParentWrapper>
   );
