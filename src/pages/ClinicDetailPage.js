@@ -5,7 +5,10 @@ import KakaoMap from "../components/Clinic/Detail/KakaoMap";
 import CommentViewer from "../components/Post/Comment/CommentViewer";
 import CommentEditor from "../components/Post/Comment/CommentEditor";
 import { useParams } from "react-router-dom";
-import { getClinicInfoById } from "../service/ApiService";
+import {
+  createDeleteRecommend,
+  getClinicInfoById,
+} from "../service/ApiService";
 import { UserContext } from "../context/UserContext";
 
 const ParentWrapper = styled.div`
@@ -32,7 +35,6 @@ const ClinicDetailPage = () => {
   const [clinicInfo, setClinicInfo] = useState({});
   const [schedule, setSchedule] = useState();
   const [kakaoMapInfo, setKakaoMapInfo] = useState({});
-  const [canEdit, setCanEdit] = useState(false);
   const [comments, setComments] = useState([]);
 
   useEffect(() => {
@@ -79,6 +81,17 @@ const ClinicDetailPage = () => {
     );
   };
 
+  const handleClickRecommend = async () => {
+    console.log("🍒clinicId : ", clinicId);
+    const response = await createDeleteRecommend(clinicId);
+    console.log("🍒병원 추천 리턴값 : ", response);
+    if (response.recommended) {
+      alert("추천되었습니다.");
+    } else {
+      alert("추천을 취소하였습니다.");
+    }
+  };
+
   return (
     <ParentWrapper>
       <section>
@@ -89,6 +102,9 @@ const ClinicDetailPage = () => {
         <h2 className="section_title">📍 지도에서 보기</h2>
         <KakaoMap {...kakaoMapInfo} />
       </section>
+      <div>
+        <button onClick={handleClickRecommend}>👍🏻</button>
+      </div>
       <div className="comment_wrapper">
         <CommentViewer
           commentData={comments}

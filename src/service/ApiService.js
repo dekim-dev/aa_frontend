@@ -459,3 +459,20 @@ export const deleteClinicComment = async (commentId) => {
     return error;
   }
 };
+
+// 클리닉 추천 클릭
+export const createDeleteRecommend = async (clinicId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/recommendation/${clinicId}`,
+      "POST",
+      token
+    );
+    console.log("병원추천 api 성공: ", response);
+    return response;
+  } catch (error) {
+    console.log("병원추천 api 실패: ", error);
+    return error;
+  }
+};
