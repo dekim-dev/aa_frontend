@@ -114,45 +114,48 @@ const CommentViewer = ({
 
   return (
     <ParentWrapper>
-      {commentData.map((comment) => (
-        <div className="map_container" key={comment.id}>
-          <p>{comment.nickname}</p>
-          {editMode[comment.id] ? (
-            // 수정 모드
-            <input
-              type="text"
-              value={editedContent[comment.id]}
-              onChange={(e) =>
-                setEditedContent({
-                  ...editedContent,
-                  [comment.id]: e.target.value,
-                })
-              }
-            />
-          ) : (
-            <div className="content">{comment.content}</div>
-          )}
+      {commentData &&
+        commentData.map((comment) => (
+          <div className="map_container" key={comment.id}>
+            <p>{comment.nickname}</p>
+            {editMode[comment.id] ? (
+              // 수정 모드
+              <input
+                type="text"
+                value={editedContent[comment.id]}
+                onChange={(e) =>
+                  setEditedContent({
+                    ...editedContent,
+                    [comment.id]: e.target.value,
+                  })
+                }
+              />
+            ) : (
+              <div className="content">{comment.content}</div>
+            )}
 
-          {comment.userId === userId ? (
-            <div className="button_wrapper">
-              {editMode[comment.id] ? (
-                <button onClick={() => handleSaveEdit(comment.id)}>저장</button>
-              ) : (
-                <button onClick={() => handleClickEditBtn(comment.id)}>
-                  수정
+            {comment.userId === userId ? (
+              <div className="button_wrapper">
+                {editMode[comment.id] ? (
+                  <button onClick={() => handleSaveEdit(comment.id)}>
+                    저장
+                  </button>
+                ) : (
+                  <button onClick={() => handleClickEditBtn(comment.id)}>
+                    수정
+                  </button>
+                )}
+                <button onClick={() => handleClickDeleteBtn(comment.id)}>
+                  삭제
                 </button>
-              )}
-              <button onClick={() => handleClickDeleteBtn(comment.id)}>
-                삭제
-              </button>
-            </div>
-          ) : (
-            <div className="button_wrapper">
-              <button>답글</button>
-            </div>
-          )}
-        </div>
-      ))}
+              </div>
+            ) : (
+              <div className="button_wrapper">
+                <button>답글</button>
+              </div>
+            )}
+          </div>
+        ))}
     </ParentWrapper>
   );
 };
