@@ -27,6 +27,14 @@ const ParentWrapper = styled.div`
   .comment_wrapper {
     width: 88%;
   }
+  .recommend_wrapper {
+    width: 70%;
+    margin: 0 auto;
+    display: flex;
+  }
+  .recommend_btn {
+    margin-left: auto;
+  }
 `;
 
 const ClinicDetailPage = () => {
@@ -102,8 +110,10 @@ const ClinicDetailPage = () => {
         <h2 className="section_title">📍 지도에서 보기</h2>
         <KakaoMap {...kakaoMapInfo} />
       </section>
-      <div>
-        <button onClick={handleClickRecommend}>👍🏻</button>
+      <div className="recommend_wrapper">
+        <button className="recommend_btn" onClick={handleClickRecommend}>
+          👍🏻
+        </button>
       </div>
       <div className="comment_wrapper">
         <CommentViewer

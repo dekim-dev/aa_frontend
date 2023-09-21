@@ -476,3 +476,30 @@ export const createDeleteRecommend = async (clinicId) => {
     return error;
   }
 };
+
+// 회원의 모든 게시글 조회
+export const getAllPosts = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/user/posts?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 회원의 게시글 삭제
+export const deleteMultiplePosts = async (postIds) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/posts`, "DELETE", postIds, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

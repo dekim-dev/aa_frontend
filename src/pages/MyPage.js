@@ -17,7 +17,7 @@ const MyPage = () => {
       <Routes>
         <Route path="/tdlist" element={<TodoList />} />
         <Route path="/diary" element={<DiaryList />} />
-        <Route path="/setting" element={<InfoEditor />} />
+        <Route path="/setting/*" element={<InfoEditor />} />
       </Routes>
     </ParentWrapper>
   );

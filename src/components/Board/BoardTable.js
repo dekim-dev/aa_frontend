@@ -52,15 +52,19 @@ const StyledTable = styled.table`
   }
 `;
 
-const WebBoardTable = ({ postList }) => {
-  console.log("🍒", postList);
-
+const WebBoardTable = ({
+  postList,
+  showCheckbox,
+  selectedPostIds,
+  onCheckboxChange,
+}) => {
   return (
     <>
       <div>
         <StyledTable>
           <thead>
             <tr>
+              <th></th>
               <th>제목</th>
               <th>글쓴이</th>
               <th>작성일</th>
@@ -71,6 +75,15 @@ const WebBoardTable = ({ postList }) => {
           <tbody>
             {postList.map((post) => (
               <tr key={post.id}>
+                <td>
+                  {showCheckbox && (
+                    <input
+                      type="checkbox"
+                      checked={selectedPostIds.includes(post.id)}
+                      onChange={() => onCheckboxChange(post.id)}
+                    />
+                  )}
+                </td>
                 <td className="title">
                   [{topics[post.topic]}]{" "}
                   <Link to={`/post/${post.id}`}>{post.title}</Link>
@@ -132,7 +145,12 @@ const MobileWrapper = styled.div`
   }
 `;
 
-const MobileBoardTable = ({ postList }) => {
+const MobileBoardTable = ({
+  postList,
+  showCheckbox,
+  selectedPostIds,
+  onCheckboxChange,
+}) => {
   return (
     <MobileWrapper>
       <div className="col">
@@ -143,6 +161,13 @@ const MobileBoardTable = ({ postList }) => {
                 [{topics[post.topic]}] {post.title}
               </p>
               <div className="row">
+                {showCheckbox && (
+                  <input
+                    type="checkbox"
+                    checked={selectedPostIds.includes(post.id)}
+                    onChange={() => onCheckboxChange(post.id)}
+                  />
+                )}
                 <p className="nickname">{post.nickname}</p>
                 <p className="createdAt">{dateFormat(post.createdAt)}</p>
                 <p className="viewCount">조회 {post.viewCount}</p>
@@ -156,13 +181,35 @@ const MobileBoardTable = ({ postList }) => {
   );
 };
 
-const BoardTable = ({ boardName, postList }) => {
+const BoardTable = ({
+  boardName,
+  postList,
+  showCheckbox,
+  selectedPostIds,
+  onCheckboxChange,
+}) => {
   const isMobile = useWindowResize();
 
   if (isMobile) {
-    return <MobileBoardTable boardName={boardName} postList={postList} />;
+    return (
+      <MobileBoardTable
+        boardName={boardName}
+        postList={postList}
+        showCheckbox={showCheckbox}
+        selectedPostIds={selectedPostIds}
+        onCheckboxChange={onCheckboxChange}
+      />
+    );
   }
-  return <WebBoardTable boardName={boardName} postList={postList} />;
+  return (
+    <WebBoardTable
+      boardName={boardName}
+      postList={postList}
+      showCheckbox={showCheckbox}
+      selectedPostIds={selectedPostIds}
+      onCheckboxChange={onCheckboxChange}
+    />
+  );
 };
 export default BoardTable;
 
