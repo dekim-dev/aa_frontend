@@ -503,3 +503,30 @@ export const deleteMultiplePosts = async (postIds) => {
     throw error;
   }
 };
+
+// 회원의 모든 댓글 조회
+export const getAllComments = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/user/comments?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 회원의 댓글 삭제
+export const deleteMultipleComments = async (commentIds) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/comments`, "DELETE", commentIds, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
