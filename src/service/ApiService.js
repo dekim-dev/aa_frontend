@@ -530,3 +530,47 @@ export const deleteMultipleComments = async (commentIds) => {
     throw error;
   }
 };
+
+// 회원 정보 (수정용)
+export const getUserInfoForUpdate = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/info`, "GET", null, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 회원 닉네임 수정
+export const updateUserNickname = async (requestBody) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/nickname`, "PUT", requestBody, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 회원 프로필사진 수정
+export const updateUserPfImg = async (requestBody) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/pfImg`, "PUT", requestBody, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 회원 탈퇴
+export const deleteUser = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/delete`, "DELETE", null, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};

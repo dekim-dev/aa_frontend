@@ -9,7 +9,7 @@ const ImgContainer = styled.img`
   height: 10rem;
 `;
 
-const ImgUploadButton = ({ userId, postId }) => {
+const ImgUploadButton = ({ userId, postId, onImageUploaded }) => {
   const [selectedImg, setSelectedImg] = useState(null);
   const [uploadMessage, setUploadMessage] = useState("");
   const [previewImgUrl, setPreviewImgUrl] = useState("");
@@ -66,6 +66,8 @@ const ImgUploadButton = ({ userId, postId }) => {
         setUploadMessage("업로드가 완료되었습니다!");
         console.log(downloadedImgUrl);
         setPreviewImgUrl("");
+        // 이미지 업로드 후 콜백 함수 호출
+        onImageUploaded(baseUrl); // 업로드된 이미지의 주소를 콜백 함수로 전달
       });
     });
   };
@@ -74,11 +76,11 @@ const ImgUploadButton = ({ userId, postId }) => {
     <>
       <input type="file" onChange={onImageChange} />
       {previewImgUrl && <ImgContainer src={previewImgUrl} alt="Preview" />}
-      {downloadedImgUrl && (
+      {/* {downloadedImgUrl && (
         <ImgContainer src={downloadedImgUrl} alt="Uploaded" />
-      )}
+      )} */}
       {selectedImg && <button onClick={handleUpload}>Upload</button>}
-      {uploadMessage && <p>{uploadMessage}</p>}
+      {/* {uploadMessage && <p>{uploadMessage}</p>} */}
     </>
   );
 };
