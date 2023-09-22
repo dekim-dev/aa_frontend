@@ -13,6 +13,7 @@ import ClinicDetailPage from "./pages/ClinicDetailPage";
 import MyPage from "./pages/MyPage";
 import UserStore from "./context/UserContext";
 import PostEditPage from "./pages/PostEditPage";
+import AdminPage from "./pages/AdminPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -55,6 +56,7 @@ function App() {
           <Route path="/clinic/list" element={<ClinicListPage />} />
           <Route path="/clinic/:clinicId" element={<ClinicDetailPage />} />
           <Route path="/mypage/*" element={<MyPage />} />
+          <Route path="/admin/*" element={<AdminPage />} />
         </Routes>
       </Router>
     </UserStore>
