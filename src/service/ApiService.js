@@ -574,3 +574,19 @@ export const deleteUser = async () => {
     throw error;
   }
 };
+
+// 게시글 키워드로 검색
+export const searchByKeyword = async (keyword) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/post/search?keyword=${keyword}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
