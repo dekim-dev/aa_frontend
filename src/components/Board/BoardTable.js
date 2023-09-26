@@ -58,6 +58,10 @@ const WebBoardTable = ({
   selectedPostIds,
   onCheckboxChange,
 }) => {
+  if (!Array.isArray(postList)) {
+    return <div>검색 결과가 없습니다.</div>;
+  }
+
   return (
     <>
       <div>

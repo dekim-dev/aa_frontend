@@ -29,6 +29,7 @@ export const call = async (api, method, request) => {
   } catch (error) {
     // 토큰 만료 또는 유효하지 않은 경우
     if (error.response && error.response.status === 401) {
+      console.log("401에러 : ", error);
       try {
         // refreshToken 호출하여 새로운 액세스 토큰 발급
         const newAccessToken = await refreshToken();
@@ -576,11 +577,16 @@ export const deleteUser = async () => {
 };
 
 // 게시글 키워드로 검색
-export const searchByKeyword = async (keyword) => {
+export const searchByKeyword = async (
+  keyword,
+  boardCategory,
+  page,
+  pageSize
+) => {
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");
     const response = await call(
-      `/post/search?keyword=${keyword}`,
+      `/post/search?keyword=${keyword}&boardCategory=${boardCategory}&page=${page}&pageSize=${pageSize}`,
       "GET",
       null,
       token

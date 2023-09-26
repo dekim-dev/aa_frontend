@@ -7,7 +7,10 @@ import {
   FreeBoardTopics,
   QnABoardTopics,
 } from "../components/Post/TopicSelectBox";
-import { getPostsByBoardCategory } from "../service/ApiService";
+import {
+  getPostsByBoardCategory,
+  searchByKeyword,
+} from "../service/ApiService";
 import { useLocation } from "react-router-dom";
 import Pagination from "../components/common/Pagination";
 
@@ -47,9 +50,38 @@ const BoardPage = ({ boardName }) => {
   const page = parseInt(queryParams.get("page")) || 1;
   const pageSize = parseInt(queryParams.get("pageSize")) || 10;
   const [postList, setPostList] = useState([]);
-
   const [currentPage, setCurrentPage] = useState(page);
   const [totalResults, setTotalResults] = useState();
+  const [searchResults, setSearchResults] = useState(null);
+
+  const handleSearch = async (keyword) => {
+    try {
+      const encodedKeyword = encodeURIComponent(keyword);
+      const response = await searchByKeyword(
+        encodedKeyword,
+        boardName,
+        currentPage - 1,
+        pageSize
+      );
+      setSearchResults(response);
+    } catch (error) {
+      console.error("게시글 검색 에러:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (searchResults) {
+      setPostList(searchResults.content);
+      setTotalResults(searchResults.totalElements);
+    } else {
+      getPostListByBoardCategory();
+    }
+  }, [boardName, currentPage, searchResults]);
+
+  useEffect(() => {
+    setSearchResults(null);
+    setCurrentPage(1);
+  }, [boardName]);
 
   const getPostListByBoardCategory = async () => {
     try {
@@ -65,10 +97,6 @@ const BoardPage = ({ boardName }) => {
     }
   };
 
-  useEffect(() => {
-    getPostListByBoardCategory();
-  }, [boardName, currentPage]);
-
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= Math.ceil(totalResults / pageSize)) {
       setCurrentPage(newPage);
@@ -83,7 +111,11 @@ const BoardPage = ({ boardName }) => {
           {boardName === "free" && <FreeBoardTopics />}
           {boardName === "qna" && <QnABoardTopics />}
         </div>
-        <BoardSearch />
+        <BoardSearch
+          boardName={boardName}
+          onSearch={handleSearch}
+          postList={postList}
+        />
       </div>
       <BoardTable boardName={boardName} postList={postList} />
       <Pagination
@@ -96,4 +128,5 @@ const BoardPage = ({ boardName }) => {
     </ParentWrapper>
   );
 };
+
 export default BoardPage;

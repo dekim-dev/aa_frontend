@@ -1,22 +1,19 @@
-import React, { useState } from "react";
-import { searchByKeyword } from "../../service/ApiService";
+import React, { useEffect, useState } from "react";
 
-const BoardSearch = () => {
+const BoardSearch = ({ boardName, onSearch, postList }) => {
   const [keyword, setKeyword] = useState("");
 
   const handleInputChange = (event) => {
     setKeyword(event.target.value);
   };
 
-  const handleSearchClick = async () => {
-    try {
-      const encodedKeyword = encodeURIComponent(keyword);
-      const response = await searchByKeyword(encodedKeyword);
-      console.log(response);
-    } catch (error) {
-      console.error("Error searching by keyword:", error);
-    }
+  const handleSearchClick = () => {
+    onSearch(keyword);
   };
+
+  useEffect(() => {
+    setKeyword("");
+  }, [boardName]);
 
   return (
     <div>
