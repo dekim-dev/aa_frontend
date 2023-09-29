@@ -21,7 +21,8 @@ const LoginForm = () => {
     pwd: "",
   });
 
-  const { setUserPfImg, setUserId, setIsLogin } = useContext(UserContext);
+  const { setUserPfImg, setUserId, setAuthority, setIsPaidMember, setIsLogin } =
+    useContext(UserContext);
 
   const handleChangeState = (e) => {
     setState({
@@ -45,6 +46,8 @@ const LoginForm = () => {
       const userInfo = await getUserInfo();
       setUserId(userInfo.id);
       setUserPfImg(userInfo.pfImg);
+      setAuthority(userInfo.authority);
+      setIsPaidMember(userInfo.isPaidMember);
       setIsLogin(true);
       console.log(userInfo);
       console.log(UserContext);

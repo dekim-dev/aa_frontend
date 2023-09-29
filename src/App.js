@@ -14,6 +14,7 @@ import MyPage from "./pages/MyPage";
 import UserStore from "./context/UserContext";
 import PostEditPage from "./pages/PostEditPage";
 import AdminPage from "./pages/AdminPage";
+import Ad from "./components/common/Ad";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -58,6 +59,7 @@ function App() {
           <Route path="/mypage/*" element={<MyPage />} />
           <Route path="/admin/*" element={<AdminPage />} />
         </Routes>
+        <Ad />
       </Router>
     </UserStore>
   );

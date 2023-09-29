@@ -35,23 +35,34 @@ const ProfileIcon = styled.img`
 const DropDown = () => {
   const [dropDownView, setDropDownView] = useState(false);
 
-  const { userPfImg, setUserId, setUserPfImg, setIsLogin, isLogin } =
-    useContext(UserContext);
+  const {
+    userPfImg,
+    setUserId,
+    setUserPfImg,
+    setIsLogin,
+    setAuthority,
+    setIsPaidMember,
+    isLogin,
+  } = useContext(UserContext);
 
   useEffect(() => {
     const getUserInformation = async () => {
       try {
         const response = await getUserInfo();
+        console.log(response);
         setUserId(response.id);
         setUserPfImg(response.pfImg);
+        setAuthority(response.authority);
+        setIsPaidMember(response.isPaidMember);
         setIsLogin(true);
+
         console.log(response);
       } catch (error) {
         console.log(error);
       }
     };
     getUserInformation();
-  }, [setUserId, setUserPfImg, setIsLogin]);
+  }, [setUserId, setUserPfImg, setIsLogin, setAuthority, setIsPaidMember]);
 
   return (
     <DropDownWrapper>

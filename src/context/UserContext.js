@@ -5,6 +5,8 @@ const UserStore = (props) => {
   const [userPfImg, setUserPfImg] = useState("");
   const [userId, setUserId] = useState(0);
   const [isLogin, setIsLogin] = useState(false);
+  const [authority, setAuthority] = useState("");
+  const [isPaidMember, setIsPaidMember] = useState("");
 
   return (
     <UserContext.Provider
@@ -15,6 +17,10 @@ const UserStore = (props) => {
         setUserId,
         isLogin,
         setIsLogin,
+        authority,
+        setAuthority,
+        isPaidMember,
+        setIsPaidMember,
       }}
     >
       {props.children}
