@@ -4,6 +4,7 @@ import NonMember from "../../../assets/images/nonMemberImg.svg";
 import DropdownContent from "./DropdownMenu";
 import { getUserInfo } from "../../../service/ApiService";
 import { UserContext } from "../../../context/UserContext";
+import { Link, useNavigate } from "react-router-dom";
 
 const DropDownWrapper = styled.div`
   position: relative;
@@ -34,6 +35,7 @@ const ProfileIcon = styled.img`
 `;
 const DropDown = () => {
   const [dropDownView, setDropDownView] = useState(false);
+  const navigate = useNavigate();
 
   const {
     userPfImg,
@@ -43,6 +45,7 @@ const DropDown = () => {
     setAuthority,
     setIsPaidMember,
     isLogin,
+    authority,
   } = useContext(UserContext);
 
   useEffect(() => {
@@ -66,7 +69,7 @@ const DropDown = () => {
 
   return (
     <DropDownWrapper>
-      {!isLogin ? (
+      {!isLogin || authority === "ROLE_ADMIN" ? (
         <ProfileIcon
           src={NonMember}
           alt="nonUserImg"

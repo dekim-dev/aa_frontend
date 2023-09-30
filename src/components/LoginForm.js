@@ -51,8 +51,11 @@ const LoginForm = () => {
       setIsLogin(true);
       console.log(userInfo);
       console.log(UserContext);
-
-      navigate("/");
+      if (userInfo.authority === "ROLE_ADMIN") {
+        navigate("/admin");
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       alert("로그인에 실패했습니다.");
       console.error("Error signing up:", error);

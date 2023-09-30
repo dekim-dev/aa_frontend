@@ -57,7 +57,8 @@ const StyledLink = styled(Link)`
 `;
 
 const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
-  const { setUserPfImg, setUserId, setIsLogin } = useContext(UserContext);
+  const { setUserPfImg, setUserId, setIsLogin, authority } =
+    useContext(UserContext);
 
   const handleLinkClick = () => {
     setDropDownView(false);
@@ -86,9 +87,15 @@ const DropdownContent = ({ isLoggedIn, setDropDownView }) => {
   if (isLoggedIn) {
     return (
       <DropdownMenu>
-        <StyledLink to="/mypage" onClick={handleLinkClick}>
-          마이페이지
-        </StyledLink>
+        {authority === "ROLE_USER" ? (
+          <StyledLink to="/mypage" onClick={handleLinkClick}>
+            마이페이지
+          </StyledLink>
+        ) : (
+          <StyledLink to="/admin" onClick={handleLinkClick}>
+            관리자 페이지
+          </StyledLink>
+        )}
         <StyledLink to="/" onClick={signOut}>
           로그아웃
         </StyledLink>
