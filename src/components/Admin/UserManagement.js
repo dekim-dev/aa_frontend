@@ -6,6 +6,7 @@ import {
   updateUserInfo,
 } from "../../service/AdminApiService";
 import { dateFormat } from "../../utils/Functions";
+import Pagination from "../common/Pagination";
 
 const ParentContainer = styled.div`
   width: 80%;
@@ -13,10 +14,12 @@ const ParentContainer = styled.div`
   flex-direction: column;
   .button_container {
     width: 94%;
-
     display: flex;
     justify-content: flex-end;
-    margin-top: 1rem;
+  }
+  .pagination {
+    margin: 1rem auto;
+    align-self: center;
   }
 `;
 
@@ -45,33 +48,38 @@ const UserManagement = () => {
   const [editedUser, setEditedUser] = useState(null);
   const [selectAll, setSelectAll] = useState(false);
   const [selectedUserIds, setSelectedUserIds] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalResults, setTotalResults] = useState();
+  const pageSize = 10;
 
   const fetchUsers = async () => {
     try {
-      const response = await allUserInfo();
-      setUsers(response);
+      const response = await allUserInfo(currentPage - 1, pageSize);
+      setUsers(response.content);
+      setTotalResults(response.totalElements);
+      console.log("🟢회원 정보: ", response);
     } catch (error) {
-      console.log("회원가져오기 실패", error);
+      console.log("🔴회원 정보 가져오기 실패", error);
     }
   };
 
   useEffect(() => {
     fetchUsers();
-  }, []);
+  }, [currentPage]);
 
-  const handleEditClick = (user) => {
+  const handleEditBtn = (user) => {
     setEditingUser(user);
     setEditedUser({ ...user }); // 수정 중인 사용자 정보를 복사하여 초기화
   };
 
-  const handleSaveClick = async () => {
+  const handleSaveBtn = async () => {
     try {
       await updateUserInfo(editedUser);
       setEditingUser(null);
       setEditedUser(null);
       fetchUsers();
     } catch (error) {
-      console.error("회원 정보 업데이트 실패", error);
+      console.error("🔴회원 정보 업데이트 실패", error);
     }
   };
 
@@ -83,6 +91,16 @@ const UserManagement = () => {
     });
   };
 
+  const toggleAllCheckbox = () => {
+    const allIds = users.map((user) => user.id);
+    if (selectAll) {
+      setSelectedUserIds([]);
+    } else {
+      setSelectedUserIds(allIds);
+    }
+    setSelectAll(!selectAll);
+  };
+
   const toggleCheckbox = (userId) => {
     if (selectedUserIds.includes(userId)) {
       setSelectedUserIds(selectedUserIds.filter((id) => id !== userId));
@@ -91,26 +109,29 @@ const UserManagement = () => {
     }
   };
 
-  const handleDeleteSelectedUsers = async () => {
-    try {
-      await deleteMultipleUsers(selectedUserIds);
-      setSelectedUserIds([]);
-      fetchUsers();
-    } catch (error) {
-      console.error("회원 삭제 실패", error);
+  const handleDeleteUserBtn = async () => {
+    if (selectedUserIds.length === 0) {
+      alert("삭제할 회원을 선택하세요.");
+      return;
+    }
+    const shouldDelete = window.confirm("선택한 회원을 삭제하시겠습니까?");
+    if (shouldDelete) {
+      try {
+        await deleteMultipleUsers(selectedUserIds);
+        console.log("🟢삭제된 회원번호: ", selectedUserIds);
+        setSelectedUserIds([]);
+        setSelectAll(false);
+        fetchUsers();
+      } catch (error) {
+        console.error("🔴회원 삭제 실패", error);
+      }
     }
   };
 
-  const handleSelectAll = () => {
-    const allIds = users.map((user) => user.id);
-
-    if (selectAll) {
-      setSelectedUserIds([]);
-    } else {
-      setSelectedUserIds(allIds);
+  const handlePageChange = (newPage) => {
+    if (newPage >= 1 && newPage <= Math.ceil(totalResults / pageSize)) {
+      setCurrentPage(newPage);
     }
-
-    setSelectAll(!selectAll);
   };
 
   return (
@@ -122,7 +143,7 @@ const UserManagement = () => {
               <th>
                 <input
                   type="checkbox"
-                  onChange={handleSelectAll}
+                  onChange={toggleAllCheckbox}
                   checked={selectAll}
                 />
               </th>
@@ -186,17 +207,23 @@ const UserManagement = () => {
                 </td>
                 <td>
                   {editingUser === user ? (
-                    <button onClick={handleSaveClick}>저장</button>
+                    <button onClick={handleSaveBtn}>저장</button>
                   ) : (
-                    <button onClick={() => handleEditClick(user)}>수정</button>
+                    <button onClick={() => handleEditBtn(user)}>수정</button>
                   )}
                 </td>
               </tr>
             ))}
           </tbody>
         </Table>
+        <Pagination
+          className="pagination"
+          currentPage={currentPage}
+          totalPages={Math.ceil(totalResults / pageSize)}
+          onPageChange={handlePageChange}
+        />
         <div className="button_container">
-          <button onClick={handleDeleteSelectedUsers}>회원 삭제</button>
+          <button onClick={handleDeleteUserBtn}>회원 삭제</button>
         </div>
       </ParentContainer>
     </>
