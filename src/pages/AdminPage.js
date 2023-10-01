@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import AdminNav from "../components/Admin/AdminNav";
 import UserManagement from "../components/Admin/UserManagement";
 import styled from "styled-components";
+import ClinicManagement from "../components/Admin/ClinicManagement";
 
 const ParentWrapper = styled.div`
   display: flex;
@@ -14,6 +15,7 @@ const AdminPage = () => {
       <AdminNav />
       <Routes>
         <Route path="/" element={<UserManagement />} />
+        <Route path="/clinic" element={<ClinicManagement />} />
       </Routes>
     </ParentWrapper>
   );
