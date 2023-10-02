@@ -125,3 +125,57 @@ export const deleteMultipleAds = async (adIds) => {
     return error;
   }
 };
+
+// ✨ 게시글 관리
+
+export const allPosts = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/admin/post?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deletePosts = async (postIds) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/admin/post`, "DELETE", postIds, token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+// ✨ 댓글 관리
+
+export const allComments = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/admin/comment?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteComments = async (commentIds) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/admin/comment`, "DELETE", commentIds, token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

@@ -4,6 +4,8 @@ import UserManagement from "../components/Admin/UserManagement";
 import styled from "styled-components";
 import ClinicManagement from "../components/Admin/ClinicManagement";
 import AdManagement from "../components/Admin/AdManagement";
+import PostManagement from "../components/Admin/PostManagement";
+import CommentManagement from "../components/Admin/CommentManagement";
 
 const ParentWrapper = styled.div`
   display: flex;
@@ -18,6 +20,8 @@ const AdminPage = () => {
         <Route path="/" element={<UserManagement />} />
         <Route path="/clinic" element={<ClinicManagement />} />
         <Route path="/ad" element={<AdManagement />} />
+        <Route path="/post" element={<PostManagement />} />
+        <Route path="/comment" element={<CommentManagement />} />
       </Routes>
     </ParentWrapper>
   );
