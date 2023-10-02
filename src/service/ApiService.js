@@ -26,6 +26,10 @@ export const call = async (api, method, request) => {
   try {
     const response = await axios(config);
     return response.data;
+    // return {
+    //   data: response.data,
+    //   status: response.status,
+    // };
   } catch (error) {
     // 토큰 만료 또는 유효하지 않은 경우
     if (error.response && error.response.status === 401) {
@@ -591,6 +595,17 @@ export const searchByKeyword = async (
       null,
       token
     );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 광고 조회
+export const getAds = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/main/ads", "GET", token);
     return response;
   } catch (error) {
     throw error;
