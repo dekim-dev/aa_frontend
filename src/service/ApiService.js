@@ -611,3 +611,29 @@ export const getAds = async () => {
     throw error;
   }
 };
+
+// 카카오페이 결제 요청
+export const readyPay = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/payment/ready", "POST", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 카카오페이 승인 요청
+export const successPay = async (pgToken) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/payment/success?pg_token=${pgToken}`,
+      "GET",
+      token
+    );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
