@@ -7,7 +7,12 @@ import DiaryList from "../components/MyPage/Diary/DiaryList";
 
 const ParentWrapper = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 2rem;
+  align-items: center;
+  @media screen and (max-width: 768px) {
+    gap: 0;
+  }
 `;
 
 const MyPage = () => {

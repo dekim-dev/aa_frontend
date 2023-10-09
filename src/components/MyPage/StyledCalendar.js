@@ -5,10 +5,12 @@ import styled from "styled-components";
 
 const ParentWrapper = styled.div`
   .react-calendar {
-    width: 20rem;
+    width: 26rem;
+    height: 20rem;
     background-color: #fff;
     border-radius: 8px;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+    /* box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2); */
+    padding: 0.2rem;
   }
   .react-calendar__navigation button {
     background: none;
@@ -55,6 +57,9 @@ const ParentWrapper = styled.div`
     border-radius: 6px;
     font-weight: bold;
     color: white;
+  }
+  @media screen and (max-width: 768px) {
+    width: 90%;
   }
 `;
 

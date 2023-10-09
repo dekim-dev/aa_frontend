@@ -9,6 +9,8 @@ import {
 import ItemAddIcon from "./ItemAddIcon";
 
 const ParentWrapper = styled.div`
+  width: 32rem;
+  height: 20rem;
   padding: 1rem;
   display: flex;
   flex-direction: column;
@@ -20,6 +22,9 @@ const ParentWrapper = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-evenly;
+    .date {
+      margin: 0.4rem auto;
+    }
   }
 
   .todo_item_container {
@@ -56,6 +61,9 @@ const ParentWrapper = styled.div`
     font-weight: bold;
     margin-left: 0.2rem;
     color: orangeRed;
+  }
+  @media screen and (max-width: 768px) {
+    width: 90%;
   }
 `;
 
@@ -145,10 +153,16 @@ const DailyTodoList = ({ selectedDate, dailyTodoItems }) => {
   return (
     <ParentWrapper>
       <div className="header">
-        <h2>{formatDate(selectedDate)}</h2>
-        <ItemAddIcon selectedDate={selectedDate} handleAdd={handleAdd} />
+        <h2 className="date">{formatDate(selectedDate)}</h2>
+        <div className="add_icon">
+          <ItemAddIcon selectedDate={selectedDate} handleAdd={handleAdd} />
+        </div>
       </div>
-      {dailyTodoList &&
+      {dailyTodoList.length === 0 ? (
+        <p style={{ textAlign: "center", paddingTop: "1rem" }}>
+          투두리스트가 없습니다.
+        </p>
+      ) : (
         dailyTodoList.map((item) => (
           <div className="todo_item_container" key={item.id}>
             <Checkbox
@@ -172,7 +186,8 @@ const DailyTodoList = ({ selectedDate, dailyTodoItems }) => {
               handleDelete={handleDelete}
             />
           </div>
-        ))}
+        ))
+      )}
     </ParentWrapper>
   );
 };

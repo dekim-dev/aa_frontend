@@ -1,4 +1,4 @@
-import { Link, Route, Routes } from "react-router-dom";
+import { Link, NavLink, Route, Routes } from "react-router-dom";
 import MyPost from "./MyPost";
 import MyComment from "./MyComment";
 import MyInfoSetting from "./MyInfoSetting";
@@ -24,20 +24,29 @@ const ParentWrapper = styled.div`
   }
 `;
 
+const StyledNavLink = styled(NavLink)`
+  &:hover {
+    font-weight: 700;
+  }
+  &.active {
+    font-weight: 800;
+  }
+`;
+
 const InfoEditor = () => {
   return (
     <ParentWrapper>
       <nav>
         <ul>
-          <Link to="/mypage/setting/posts">
+          <StyledNavLink to="/mypage/setting/posts">
             <li>내 글</li>
-          </Link>
-          <Link to="/mypage/setting/comments">
+          </StyledNavLink>
+          <StyledNavLink to="/mypage/setting/comments">
             <li>내 댓글</li>
-          </Link>
-          <Link to="/mypage/setting/">
+          </StyledNavLink>
+          <StyledNavLink to="/mypage/setting">
             <li>내 정보</li>
-          </Link>
+          </StyledNavLink>
         </ul>
       </nav>
       <Routes>

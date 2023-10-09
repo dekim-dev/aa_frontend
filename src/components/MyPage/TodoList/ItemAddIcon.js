@@ -97,7 +97,7 @@ const ItemAddIcon = ({ selectedDate, handleAdd }) => {
   return (
     <>
       <StyledButton onClick={handleOpenModal}>
-        <h2>🛒</h2>
+        <h2>추가</h2>
       </StyledButton>
       {isModalOpen && (
         <Overlay>

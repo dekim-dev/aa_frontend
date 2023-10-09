@@ -5,15 +5,21 @@ const DeleteButton = styled.button`
   background-color: transparent;
   border: none;
   cursor: pointer;
-  font-size: 1.8rem;
+  font-size: 1rem;
+  &:hover {
+    background-color: #ececec;
+  }
 `;
 
 const ItemDeleteIcon = ({ itemId, handleDelete }) => {
   const handleDeleteClick = () => {
-    handleDelete(itemId);
+    const confirmDelete = window.confirm("투두아이템을 삭제하시겠습니까?");
+    if (confirmDelete) {
+      handleDelete(itemId);
+    }
   };
 
-  return <DeleteButton onClick={handleDeleteClick}>🗑</DeleteButton>;
+  return <DeleteButton onClick={handleDeleteClick}>삭제</DeleteButton>;
 };
 
 export default ItemDeleteIcon;
