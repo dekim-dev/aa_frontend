@@ -304,6 +304,17 @@ export const getDiaryList = async () => {
   }
 };
 
+// 다이어리 최신순으로 3개 조회
+export const getThreeLatestDiaryList = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/diary/latest", "GET", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 회원 정보 조회 (UserContext저장용)
 export const getUserInfo = async () => {
   try {
@@ -632,6 +643,17 @@ export const successPay = async (pgToken) => {
       "GET",
       token
     );
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 베스트게시판용 게시글
+export const getPopularPosts = async () => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call("/post/popular", "GET", token);
     return response;
   } catch (error) {
     throw error;
