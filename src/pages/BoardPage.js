@@ -8,6 +8,7 @@ import {
   QnABoardTopics,
 } from "../components/Post/TopicSelectBox";
 import {
+  getPopularPosts,
   getPostsByBoardCategory,
   searchByKeyword,
 } from "../service/ApiService";
@@ -70,13 +71,25 @@ const BoardPage = ({ boardName }) => {
   };
 
   useEffect(() => {
-    if (searchResults) {
+    if (boardName === "best") {
+      getPopularPostsList(); // 베스트 게시판인 경우 베스트 게시글을 가져옴
+    } else if (searchResults) {
       setPostList(searchResults.content);
       setTotalResults(searchResults.totalElements);
     } else {
       getPostListByBoardCategory();
     }
   }, [boardName, currentPage, searchResults]);
+
+  const getPopularPostsList = async () => {
+    try {
+      const response = await getPopularPosts();
+      setPostList(response.content);
+      console.log(response);
+    } catch (error) {
+      console.error("베스트 게시글 가져오기 에러:", error);
+    }
+  };
 
   useEffect(() => {
     setSearchResults(null);
