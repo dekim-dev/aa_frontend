@@ -1,5 +1,5 @@
 import { TextField } from "@material-ui/core";
-import { styled, css } from "styled-components";
+import styled, { css } from "styled-components";
 
 const StyledTextField = styled(TextField)`
   .MuiOutlinedInput-input {
@@ -10,10 +10,13 @@ const StyledTextField = styled(TextField)`
     border: 0.4px;
   }
   & .MuiOutlinedInput-root:focus-within .MuiOutlinedInput-notchedOutline {
-    border-color: var(--dark-orange);
+    border-color: gray;
   }
   & .MuiInputLabel-root.Mui-focused {
-    color: var(--red-bean);
+    color: #222222;
+  }
+  & .MuiFormHelperText-root {
+    color: ${(props) => (props.isValid ? "black" : "red")};
   }
 
   ${(props) =>
@@ -41,6 +44,7 @@ const InputField = ({
   type,
   width,
   height,
+  isValid,
 }) => {
   return (
     <>
@@ -57,8 +61,10 @@ const InputField = ({
         type={type}
         width={width}
         height={height}
+        isValid={isValid}
       />
     </>
   );
 };
+
 export default InputField;

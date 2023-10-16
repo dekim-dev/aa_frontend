@@ -69,6 +69,30 @@ export const signup = async (request) => {
   }
 };
 
+// 닉네임 중복 확인
+export const dupNickname = async (nickname) => {
+  try {
+    const response = await axios.get(API_BASE_URL + "/auth/nickname", {
+      params: { nickname: nickname },
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
+// 이메일 중복 확인
+export const dupEmail = async (email) => {
+  try {
+    const response = await axios.get(API_BASE_URL + "/auth/email", {
+      params: { email: email },
+    });
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
+
 // 로그인
 export const signin = async (request) => {
   try {
