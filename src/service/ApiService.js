@@ -93,6 +93,16 @@ export const dupEmail = async (email) => {
   }
 };
 
+// 비밀번호 재발급
+export const issueTempPwd = async (email) => {
+  try {
+    const response = await axios.get(API_BASE_URL + `/auth/password/${email}`);
+    console.log(response);
+    return response;
+  } catch (error) {
+    return error.response.data;
+  }
+};
 // 로그인
 export const signin = async (request) => {
   try {

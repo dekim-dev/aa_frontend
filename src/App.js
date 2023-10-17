@@ -17,6 +17,7 @@ import AdminPage from "./pages/AdminPage";
 import Ad from "./components/common/Ad";
 import MembershipPage from "./pages/MembershipPage";
 import KakaoCallback from "./components/KakaoPay/KakaoCallBack";
+import FindPwdPage from "./pages/FindPwdPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -46,6 +47,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signin" element={<LoginPage />} />
           <Route path="/signup" element={<JoinPage />} />
+          <Route path="/findpwd" element={<FindPwdPage />} />
           <Route path="/post" element={<PostWritePage />} />
           <Route path="/post/:postId" element={<PostPage />} />
           <Route path="/post/edit/:postId" element={<PostEditPage />} />

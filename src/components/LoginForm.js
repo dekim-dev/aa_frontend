@@ -3,15 +3,22 @@ import InputField from "./common/TextField";
 import Button from "./common/Button";
 import styled from "styled-components";
 import { signin, getUserInfo } from "../service/ApiService";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 const ParentWrapper = styled.div`
-  width: 80%;
+  width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 1rem;
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
+  .extra_wrapper {
+    display: flex;
+    align-items: center;
+  }
 `;
 
 const LoginForm = () => {
@@ -76,7 +83,7 @@ const LoginForm = () => {
         value={state.email}
         placeholder={"이메일을 입력하세요."}
         onChange={handleChangeState}
-        width="14rem"
+        width="100%"
       />
       <InputField
         type={"password"}
@@ -86,10 +93,10 @@ const LoginForm = () => {
         placeholder={"비밀번호를 입력하세요."}
         onChange={handleChangeState}
         onKeyDown={enterKeyEventHandler}
-        width="14rem"
+        width="100%"
       />
       <Button
-        width="10rem"
+        width="70%"
         height="2rem"
         fontSize="1.5rem"
         padding="10px 20px"
@@ -97,6 +104,10 @@ const LoginForm = () => {
       >
         로 그 인
       </Button>
+      <div className="extra_wrapper">
+        <Link to="/signup">회원가입</Link>
+        <Link to="/findpwd">비밀번호 찾기</Link>
+      </div>
     </ParentWrapper>
   );
 };
