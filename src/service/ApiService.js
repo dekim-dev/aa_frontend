@@ -603,6 +603,17 @@ export const updateUserNickname = async (requestBody) => {
   }
 };
 
+// 회원 비밀번호 수정
+export const updateUserPwd = async (requestBody) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/password`, "PUT", requestBody, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 회원 프로필사진 수정
 export const updateUserPfImg = async (requestBody) => {
   try {
