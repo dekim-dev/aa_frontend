@@ -25,6 +25,12 @@ const DiaryViewer = () => {
           <p>{diary.title}</p>
           <p>{diary.content}</p>
           <p>{diary.conclusion}</p>
+          {diary.medicationLists.map((medication, index) => (
+            <div key={index}>
+              <p>{medication.med}</p>
+              <p>{medication.takenAt}</p>
+            </div>
+          ))}
         </div>
       ))}
     </>

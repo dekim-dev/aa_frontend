@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { createDiary } from "../../../service/ApiService";
+import { useNavigate } from "react-router-dom";
 
 const ParentWrapper = styled.div`
   width: 70%;
@@ -24,14 +25,33 @@ const ParentWrapper = styled.div`
 `;
 
 const DiaryEditor = () => {
+  const navigate = useNavigate();
   const [state, setState] = useState({
     title: "",
     content: "",
     conclusion: "",
     med: "",
-    takenAt: "10:00", // 초기값 설정
+    takenAt: "10:00",
+    createdAt: "",
     medicationList: [],
   });
+
+  // 오늘의 날짜를 YYYY-MM-DD 형식으로 가져오는 함수
+  const getTodayDate = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = (today.getMonth() + 1).toString().padStart(2, "0");
+    const day = today.getDate().toString().padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  useEffect(() => {
+    // 컴포넌트가 마운트될 때 오늘의 날짜로 초기화
+    setState({
+      ...state,
+      createdAt: getTodayDate(),
+    });
+  }, []); // 빈 배열은 컴포넌트가 마운트될 때 한 번만 실행
 
   const handleChangeState = (e) => {
     setState({
@@ -42,17 +62,14 @@ const DiaryEditor = () => {
 
   const handleAddMedication = () => {
     const { med, takenAt } = state;
-    if (med) {
-      const newMedication = {
-        med,
-        takenAt,
-      };
-      setState({
-        ...state,
-        med: "",
-        medicationList: [...state.medicationList, newMedication],
-      });
-    }
+    const newMedication = {
+      med,
+      takenAt,
+    };
+    setState({
+      ...state,
+      medicationList: [...state.medicationList, newMedication],
+    });
   };
 
   const handleDeleteMedication = (index) => {
@@ -65,17 +82,31 @@ const DiaryEditor = () => {
   };
 
   const handleSubmit = async () => {
+    if (
+      !state.title ||
+      !state.content ||
+      !state.conclusion ||
+      state.medicationList.length === 0
+    ) {
+      alert("모든 필드를 입력해 주세요.");
+      return;
+    }
+    const localDateTimeString = new Date(state.createdAt).toISOString(); // 날짜를 문자열로 변환
     const requestData = {
       title: state.title,
       content: state.content,
       conclusion: state.conclusion,
+      medicationLists: state.medicationList,
+      createdAt: localDateTimeString,
     };
 
     try {
       const response = await createDiary(requestData);
+      console.log("🟢다이어리 등록 완료: ", response);
       alert("다이어리가 등록되었습니다.");
+      navigate(`mypage/diary/${response.id}`);
     } catch (error) {
-      console.error("다이어리 등록 에러", error);
+      console.error("🔴다이어리 등록 에러: ", error);
     }
   };
 
@@ -95,6 +126,12 @@ const DiaryEditor = () => {
   return (
     <ParentWrapper>
       <h3 style={{ textAlign: "center" }}>오늘의 일기</h3>
+      <input
+        type="date"
+        name="createdAt"
+        onChange={handleChangeState}
+        value={state.createdAt}
+      />
       <input
         type="text"
         name="title"

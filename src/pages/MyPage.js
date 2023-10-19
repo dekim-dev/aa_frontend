@@ -3,7 +3,9 @@ import { styled } from "styled-components";
 import Menu from "../components/MyPage/Menu";
 import TodoList from "../components/MyPage/TodoList/TodoList";
 import InfoEditor from "../components/MyPage/MySetting/InfoEditor";
+import DiaryMain from "../components/MyPage/Diary/DiaryMain";
 import DiaryList from "../components/MyPage/Diary/DiaryList";
+import DiaryViewer from "../components/MyPage/Diary/DiaryViewer";
 
 const ParentWrapper = styled.div`
   display: flex;
@@ -21,7 +23,9 @@ const MyPage = () => {
       <Menu />
       <Routes>
         <Route path="/tdlist" element={<TodoList />} />
-        <Route path="/diary" element={<DiaryList />} />
+        <Route path="/diary" element={<DiaryMain />} />
+        <Route path="/diary/list" element={<DiaryList />} />
+        <Route path="/diary/:diaryId" element={<DiaryViewer />} />
         <Route path="/setting/*" element={<InfoEditor />} />
       </Routes>
     </ParentWrapper>
