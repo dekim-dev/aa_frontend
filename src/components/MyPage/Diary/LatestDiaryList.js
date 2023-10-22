@@ -41,7 +41,9 @@ const LatestDiaryList = () => {
   return (
     <ParentWrapper>
       <div className="view_all_button_wrapper">
-        <button>전체보기</button>
+        <button>
+          <Link to={"/mypage/diary/list"}>전체보기</Link>
+        </button>
       </div>
       {diaryList.map((diary) => (
         <Link
