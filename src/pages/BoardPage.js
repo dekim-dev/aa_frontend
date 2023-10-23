@@ -85,6 +85,7 @@ const BoardPage = ({ boardName }) => {
     try {
       const response = await getPopularPosts();
       setPostList(response.content);
+      setTotalResults(response.totalElements);
       console.log(response);
     } catch (error) {
       console.error("베스트 게시글 가져오기 에러:", error);
