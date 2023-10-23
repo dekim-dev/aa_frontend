@@ -349,6 +349,50 @@ export const getThreeLatestDiaryList = async () => {
   }
 };
 
+// 다이어리 id로 조회
+export const getDiaryById = async (diaryId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/diary/${diaryId}`, "GET", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 다이어리 id로 삭제
+export const deleDiaryById = async (diaryId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/diary/${diaryId}`, "DELETE", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// MedList 개별 삭제
+export const deleteMedListById = async (diaryId, medId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/diary/${diaryId}/${medId}`, "DELETE", token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 다이어리 id로 수정
+export const updateDiaryById = async (diaryId, requestData) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/diary/${diaryId}`, "PUT", requestData, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
 // 회원 정보 조회 (UserContext저장용)
 export const getUserInfo = async () => {
   try {
