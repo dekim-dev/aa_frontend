@@ -1,7 +1,12 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { createDiary } from "../../../service/ApiService";
-import { useNavigate } from "react-router-dom";
+import {
+  createDiary,
+  deleteMedListById,
+  getDiaryById,
+  updateDiaryById,
+} from "../../../service/ApiService";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ParentWrapper = styled.div`
   width: 70%;
@@ -24,8 +29,9 @@ const ParentWrapper = styled.div`
   }
 `;
 
-const DiaryEditor = () => {
+const DiaryEditor = ({ isEdit }) => {
   const navigate = useNavigate();
+  const { diaryId } = useParams();
   const [state, setState] = useState({
     title: "",
     content: "",
@@ -35,6 +41,27 @@ const DiaryEditor = () => {
     createdAt: new Date().toISOString().split("T")[0],
     medicationList: [],
   });
+
+  useEffect(() => {
+    if (isEdit) {
+      async function fetchDiary() {
+        try {
+          const diaryData = await getDiaryById(diaryId);
+          console.log(diaryData);
+          setState({
+            title: diaryData.title,
+            content: diaryData.content,
+            conclusion: diaryData.conclusion,
+            medicationList: diaryData.medicationLists || [],
+            createdAt: diaryData.createdAt.split("T")[0],
+          });
+        } catch (error) {
+          console.error("일기 불러오기 에러: ", error);
+        }
+      }
+      fetchDiary();
+    }
+  }, [isEdit, diaryId]);
 
   const handleChangeState = (e) => {
     setState({
@@ -55,13 +82,36 @@ const DiaryEditor = () => {
     });
   };
 
-  const handleDeleteMedication = (index) => {
-    const updatedMedicationList = [...state.medicationList];
-    updatedMedicationList.splice(index, 1);
-    setState({
-      ...state,
-      medicationList: updatedMedicationList,
-    });
+  const handleDeleteMedication = async (medication, index) => {
+    const confirmDelete = window.confirm(
+      "복용약 정보를 삭제하시겠습니까? 복구할 수 없습니다."
+    );
+    if (confirmDelete) {
+      try {
+        await deleteMedListById(diaryId, medication.id);
+        const updatedMedicationList = [...state.medicationList];
+        updatedMedicationList.splice(index, 1);
+        setState({
+          ...state,
+          medicationList: updatedMedicationList,
+        });
+      } catch (error) {
+        console.error("삭제 오류:", error);
+      }
+    }
+  };
+
+  const handleDeleteMedFromList = async (index) => {
+    try {
+      const updatedMedicationList = [...state.medicationList];
+      updatedMedicationList.splice(index, 1);
+      setState({
+        ...state,
+        medicationList: updatedMedicationList,
+      });
+    } catch (error) {
+      console.error("약을 삭제하는 중에 오류가 발생했습니다:", error);
+    }
   };
 
   const handleSubmit = async () => {
@@ -84,12 +134,22 @@ const DiaryEditor = () => {
     };
 
     try {
-      const response = await createDiary(requestData);
-      console.log("🟢다이어리 등록 완료: ", response);
-      alert("다이어리가 등록되었습니다.");
-      navigate(`mypage/diary/${response.id}`);
+      if (isEdit) {
+        const response = await updateDiaryById(diaryId, requestData);
+        console.log(requestData);
+        console.log("🟢다이어리 수정 완료: ", response);
+        alert("다이어리가 수정되었습니다.");
+        navigate(`/mypage/diary/${diaryId}`);
+      } else {
+        const response = await createDiary(requestData);
+        console.log(requestData);
+        console.log("🟢다이어리 등록 완료: ", response);
+        alert("다이어리가 등록되었습니다.");
+        navigate(`/mypage/diary/${response.id}`);
+      }
     } catch (error) {
-      console.error("🔴다이어리 등록 에러: ", error);
+      console.log(requestData);
+      console.error("🔴다이어리 등록 또는 수정 실패: ", error);
     }
   };
 
@@ -119,6 +179,7 @@ const DiaryEditor = () => {
         type="text"
         name="title"
         onChange={handleChangeState}
+        value={state.title}
         placeholder="일기의 제목을 입력하세요"
       />
       <div className="med_wrapper">
@@ -143,14 +204,24 @@ const DiaryEditor = () => {
         <button onClick={handleAddMedication}>추가</button>
       </div>
       {state.medicationList.map((medication, index) => (
-        <div key={index}>
-          {medication.med} - {medication.takenAt}
-          <button onClick={() => handleDeleteMedication(index)}>삭제</button>
+        <div key={index} style={{ display: "flex", gap: "1rem" }}>
+          {medication.med} -
+          {medication.takenAt
+            ? medication.takenAt.slice(0, 5)
+            : "시간 정보 없음"}
+          {isEdit ? (
+            <button onClick={() => handleDeleteMedication(medication, index)}>
+              삭제
+            </button>
+          ) : (
+            <button onClick={() => handleDeleteMedFromList(index)}>삭제</button>
+          )}
         </div>
       ))}
       <textarea
         name="content"
         onChange={handleChangeState}
+        value={state.content}
         placeholder="일기 본문을 입력하세요"
         style={{ width: "100%", height: "400px", padding: "0.4rem" }}
       />
@@ -158,9 +229,14 @@ const DiaryEditor = () => {
         type="text"
         name="conclusion"
         onChange={handleChangeState}
-        placeholder="오늘의 한줄!"
+        value={state.conclusion}
+        placeholder="오늘의 한 줄!"
       />
-      <button onClick={handleSubmit}>등 록</button>
+      {isEdit ? (
+        <button onClick={handleSubmit}>수 정</button>
+      ) : (
+        <button onClick={handleSubmit}>등 록</button>
+      )}
     </ParentWrapper>
   );
 };

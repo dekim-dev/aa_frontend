@@ -19,6 +19,9 @@ const ParentWrapper = styled.div`
     display: flex;
     justify-content: flex-end;
   }
+  @media screen and (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const LatestDiaryList = () => {
@@ -48,7 +51,7 @@ const LatestDiaryList = () => {
       {diaryList.map((diary) => (
         <Link
           className="map_container"
-          to={`/diary/${diary.id}`}
+          to={`/mypage/diary/${diary.id}`}
           key={diary.id}
         >
           <div className="diary_row">

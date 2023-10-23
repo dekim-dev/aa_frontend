@@ -9,7 +9,7 @@ const ParentWrapper = styled.div`
   left: 0;
   right: 0;
   background-color: #ececec;
-  margin: 1rem;
+  margin-top: 2rem;
   padding: 1rem;
   display: flex;
   flex-direction: row;
@@ -29,6 +29,8 @@ const MobileWrapper = styled.div`
   background-color: #ececec;
   display: flex;
   justify-content: center;
+  margin-top: 2rem;
+
   img {
     width: 100%;
     max-height: 80px;

@@ -6,6 +6,7 @@ import InfoEditor from "../components/MyPage/MySetting/InfoEditor";
 import DiaryMain from "../components/MyPage/Diary/DiaryMain";
 import DiaryList from "../components/MyPage/Diary/DiaryList";
 import DiaryViewer from "../components/MyPage/Diary/DiaryViewer";
+import DiaryEditor from "../components/MyPage/Diary/DiaryEditor";
 
 const ParentWrapper = styled.div`
   display: flex;
@@ -26,6 +27,10 @@ const MyPage = () => {
         <Route path="/diary" element={<DiaryMain />} />
         <Route path="/diary/list" element={<DiaryList />} />
         <Route path="/diary/:diaryId" element={<DiaryViewer />} />
+        <Route
+          path="/diary/edit/:diaryId"
+          element={<DiaryEditor isEdit={true} />}
+        />
         <Route path="/setting/*" element={<InfoEditor />} />
       </Routes>
     </ParentWrapper>

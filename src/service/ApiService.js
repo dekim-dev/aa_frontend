@@ -328,10 +328,14 @@ export const createDiary = async (diary) => {
 };
 
 // 다이어리 조회
-export const getDiaryList = async () => {
+export const getDiaryList = async (page, pageSize) => {
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");
-    const response = await call("/diary", "GET", token);
+    const response = await call(
+      `/diary?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      token
+    );
     return response;
   } catch (error) {
     throw error;
@@ -387,6 +391,17 @@ export const updateDiaryById = async (diaryId, requestData) => {
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");
     const response = await call(`/diary/${diaryId}`, "PUT", requestData, token);
+    return response;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 다이어리 다중 삭제
+export const deleteMultipleDiaries = async (diaryIds) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/diary/diary`, "DELETE", diaryIds, token);
     return response;
   } catch (error) {
     throw error;
