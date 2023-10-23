@@ -56,3 +56,20 @@ export const dateFormatWithDash = (selectedDate) => {
 
   return dateString;
 };
+
+export const dateFormatWithTime = (dateString) => {
+  // Date 객체 생성
+  const date = new Date(dateString);
+
+  // 원하는 날짜 형식으로 포맷팅
+  const year = String(date.getFullYear()).slice(-2);
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // 월은 0부터 시작하므로 +1 해주고 2자리로 포맷팅
+  const day = String(date.getDate()).padStart(2, "0"); // 일자를 2자리로 포맷팅
+  const hours = String(date.getHours()).padStart(2, "0"); // 시를 2자리로 포맷팅
+  const minutes = String(date.getMinutes()).padStart(2, "0"); // 분을 2자리로 포맷팅
+
+  // 최종 포맷된 날짜 문자열
+  const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}`;
+
+  return formattedDate;
+};

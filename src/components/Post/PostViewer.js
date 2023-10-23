@@ -5,6 +5,8 @@ import { dateFormat } from "../../utils/Functions";
 import { styled } from "styled-components";
 import MyButton from "./MyButton";
 import { usePostStore } from "../../store";
+import { UserNicknameBar, UserPfImgBar } from "../common/UserNameTag";
+import useWindowResize from "../../utils/useWindowResize";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -15,28 +17,22 @@ const ParentWrapper = styled.div`
   width: 80%;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1rem;
   .row {
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-left: 1rem;
-  }
-  .profile_nickname_wrapper {
-    display: flex;
-    align-items: center;
-  }
-  .profile_img {
-    width: 2.4rem;
-    height: 2.4rem;
-    border-radius: 50%;
   }
   .title {
     font-size: 1.4rem;
   }
   .post_info_container {
-    margin-top: -2rem;
-    font-size: 1rem;
+    margin-top: -0.8rem;
+  }
+  .user_info_wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
   }
   .content {
     border: 1px solid #ececec;
@@ -78,6 +74,20 @@ const ParentWrapper = styled.div`
     display: flex;
     gap: 0.6rem;
   }
+  @media screen and (max-width: 768px) {
+    gap: 0.8rem;
+    .post_info_container {
+      margin-top: 0rem;
+    }
+  }
+`;
+
+const MobileInfoWrapper = styled.div`
+  display: flex;
+  .nickname_post_info_wrapper {
+    display: flex;
+    flex-direction: column;
+  }
 `;
 
 export const koreanBoardNames = {
@@ -102,6 +112,7 @@ export const topics = {
 const PostViewer = ({ postData, canEdit, postId }) => {
   const navigate = useNavigate();
   const { post } = usePostStore();
+  const isMobile = useWindowResize();
 
   const handleDelete = async () => {
     if (window.confirm(`정말 삭제하시겠습니까?`)) {
@@ -139,19 +150,38 @@ const PostViewer = ({ postData, canEdit, postId }) => {
               [{topics[postData.topic]}] {postData.title}
             </p>
           </div>
-          <div className="post_info_container row">
-            <div className="profile_nickname_wrapper">
-              <img
-                className="profile_img"
-                src={postData.pfImg}
-                alt="profile img"
-              ></img>
-              <p>{postData.nickname}</p>
+          {isMobile ? (
+            <MobileInfoWrapper>
+              <UserPfImgBar userPfImg={postData.pfImg} />
+              <div className="nickname_post_info_wrapper">
+                <UserNicknameBar userNickname={postData.nickname} />
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: "0.6rem",
+                    color: "gray",
+                    fontSize: "0.9rem",
+                  }}
+                >
+                  <p>{dateFormat(postData.createdAt)}</p>
+                  <p>◉{postData.viewCount}</p>
+                  <p>❤︎ {postData.likesCount} </p>
+                </div>
+              </div>
+            </MobileInfoWrapper>
+          ) : (
+            <div className="post_info_container row">
+              <div className="user_info_wrapper">
+                <UserPfImgBar userPfImg={postData.pfImg} />
+                <UserNicknameBar userNickname={postData.nickname} />
+              </div>
+              <p>{dateFormat(postData.createdAt)}</p>
+              <p>조회수 {postData.viewCount}</p>
+              <p>좋아요 {postData.likesCount}</p>
             </div>
-            <p>{dateFormat(postData.createdAt)}</p>
-            <p>조회수 {postData.viewCount}</p>
-            <p>좋아요 {postData.likesCount}</p>
-          </div>
+          )}
+
           <div
             className="content"
             dangerouslySetInnerHTML={{ __html: postData.content }}

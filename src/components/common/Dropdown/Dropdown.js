@@ -4,7 +4,6 @@ import NonMember from "../../../assets/images/nonMemberImg.svg";
 import DropdownContent from "./DropdownMenu";
 import { getUserInfo } from "../../../service/ApiService";
 import { UserContext } from "../../../context/UserContext";
-import { Link, useNavigate } from "react-router-dom";
 
 const DropDownWrapper = styled.div`
   position: relative;
@@ -35,7 +34,6 @@ const ProfileIcon = styled.img`
 `;
 const DropDown = () => {
   const [dropDownView, setDropDownView] = useState(false);
-  const navigate = useNavigate();
 
   const {
     userPfImg,
@@ -44,6 +42,7 @@ const DropDown = () => {
     setIsLogin,
     setAuthority,
     setIsPaidMember,
+    setUserNickname,
     isLogin,
     authority,
   } = useContext(UserContext);
@@ -52,20 +51,27 @@ const DropDown = () => {
     const getUserInformation = async () => {
       try {
         const response = await getUserInfo();
-        console.log(response);
+        console.log("👉🏻드롭다운: ", response);
         setUserId(response.id);
         setUserPfImg(response.pfImg);
         setAuthority(response.authority);
         setIsPaidMember(response.isPaidMember);
+        setUserNickname(response.nickname);
         setIsLogin(true);
-
         console.log(response);
       } catch (error) {
         console.log(error);
       }
     };
     getUserInformation();
-  }, [setUserId, setUserPfImg, setIsLogin, setAuthority, setIsPaidMember]);
+  }, [
+    setUserId,
+    setUserPfImg,
+    setIsLogin,
+    setAuthority,
+    setIsPaidMember,
+    setUserNickname,
+  ]);
 
   return (
     <DropDownWrapper>

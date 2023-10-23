@@ -28,8 +28,14 @@ const LoginForm = () => {
     pwd: "",
   });
 
-  const { setUserPfImg, setUserId, setAuthority, setIsPaidMember, setIsLogin } =
-    useContext(UserContext);
+  const {
+    setUserPfImg,
+    setUserId,
+    setAuthority,
+    setIsPaidMember,
+    setIsLogin,
+    setUserNickname,
+  } = useContext(UserContext);
 
   const handleChangeState = (e) => {
     setState({
@@ -61,6 +67,7 @@ const LoginForm = () => {
         setAuthority(userInfo.authority);
         setIsPaidMember(userInfo.isPaidMember);
         setIsLogin(true);
+        setUserNickname(userInfo.nickname);
         console.log(userInfo);
         console.log(UserContext);
         navigate("/");
