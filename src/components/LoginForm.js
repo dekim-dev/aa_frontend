@@ -39,6 +39,11 @@ const LoginForm = () => {
   };
 
   const handleLogin = async () => {
+    if (!state.email || !state.pwd) {
+      alert("이메일주소와 비밀번호를 모두 입력해 주세요.");
+      return;
+    }
+
     const requestData = {
       email: state.email,
       password: state.pwd,
@@ -46,26 +51,29 @@ const LoginForm = () => {
 
     try {
       const response = await signin(requestData);
-      alert(`로그인 되었습니다.`);
-      console.log("로그인 response: ", response);
-
-      // 프로필 정보를 가져오고 UserContext를 업데이트
-      const userInfo = await getUserInfo();
-      setUserId(userInfo.id);
-      setUserPfImg(userInfo.pfImg);
-      setAuthority(userInfo.authority);
-      setIsPaidMember(userInfo.isPaidMember);
-      setIsLogin(true);
-      console.log(userInfo);
-      console.log(UserContext);
-      if (userInfo.authority === "ROLE_ADMIN") {
-        navigate("/admin");
-      } else {
+      if (response.status === 200) {
+        alert(`로그인 되었습니다.`);
+        console.log("🟢로그인 성공: ", response);
+        // 프로필 정보를 가져오고 UserContext를 업데이트
+        const userInfo = await getUserInfo();
+        setUserId(userInfo.id);
+        setUserPfImg(userInfo.pfImg);
+        setAuthority(userInfo.authority);
+        setIsPaidMember(userInfo.isPaidMember);
+        setIsLogin(true);
+        console.log(userInfo);
+        console.log(UserContext);
         navigate("/");
+        if (userInfo.authority === "ROLE_ADMIN") {
+          navigate("/admin");
+        }
+      } else {
+        alert(response.response.data);
+        console.error("🔴로그인 실패:", response);
       }
     } catch (error) {
       alert("로그인에 실패했습니다.");
-      console.error("Error signing up:", error);
+      console.error("🔴로그인 실패:", error);
     }
   };
 
