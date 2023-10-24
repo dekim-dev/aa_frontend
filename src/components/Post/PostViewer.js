@@ -1,6 +1,10 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { createDeleteLikes, deletePost } from "../../service/ApiService";
+import {
+  createDeleteLikes,
+  deletePost,
+  reportPost,
+} from "../../service/ApiService";
 import { dateFormat } from "../../utils/Functions";
 import { styled } from "styled-components";
 import MyButton from "./MyButton";
@@ -138,6 +142,11 @@ const PostViewer = ({ postData, canEdit, postId }) => {
     }
   };
 
+  const handleReportPost = async () => {
+    const response = await reportPost(postId);
+    console.log(response);
+  };
+
   return (
     <Wrapper>
       {postData && (
@@ -189,6 +198,7 @@ const PostViewer = ({ postData, canEdit, postId }) => {
 
           {!canEdit && (
             <div className="edit_delete_wrapper">
+              <button onClick={handleReportPost}>게시글 신고</button>
               <button onClick={handleClickLikes}>👍🏻</button>
             </div>
           )}

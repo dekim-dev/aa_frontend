@@ -42,6 +42,7 @@ const Ad = () => {
   const [ads, setAds] = useState([]);
   const [currentAdIndex, setCurrentAdIndex] = useState(0);
   const isMobile = useWindowResize();
+  const token = localStorage.getItem("ACCESS_TOKEN");
 
   const fetchAdList = async () => {
     try {
@@ -55,7 +56,7 @@ const Ad = () => {
 
   useEffect(() => {
     fetchAdList();
-  }, [isPaidMember]);
+  }, [isPaidMember, token]);
 
   useEffect(() => {
     const interval = setInterval(() => {

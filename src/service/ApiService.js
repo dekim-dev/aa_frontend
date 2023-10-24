@@ -479,6 +479,24 @@ export const createDeleteLikes = async (likesDTO) => {
   }
 };
 
+// 게시글 신고
+export const reportPost = async (postId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/user/post/${postId}/report`,
+      "PUT",
+      null,
+      token
+    );
+    console.log("게시글 신고/취소 성공: ", response);
+    return response;
+  } catch (error) {
+    console.log("게시글 신고/취소 실패: ", error);
+    return error;
+  }
+};
+
 //댓글 작성
 export const createComment = async (requestData, postId) => {
   try {
