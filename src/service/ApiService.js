@@ -781,3 +781,25 @@ export const getPopularPosts = async () => {
     throw error;
   }
 };
+
+// 회원 차단
+export const blockAUser = async (userId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/block/${userId}`, "POST", token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+// 회원 차단
+export const unblockAUser = async (userId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/user/block/${userId}`, "DELETE", token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
