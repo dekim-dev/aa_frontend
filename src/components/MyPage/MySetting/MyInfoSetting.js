@@ -57,6 +57,7 @@ const MyInfoSetting = () => {
 
   const [newNickname, setNewNickname] = useState("");
   const [nicknameHelperText, setNicknameHelperText] = useState("");
+  const [isNewNicknameValid, setIsNewNicknameValid] = useState(false);
 
   const [newPwd, setNewPwd] = useState("");
   const [newPwdHelperText, setNewPwdHelperText] = useState("");
@@ -67,9 +68,24 @@ const MyInfoSetting = () => {
   const [isConNewPwdValid, setIsConNewPwdValid] = useState(false);
 
   const handleChangeNickname = (e) => {
-    setNewNickname(e.target.value);
-    setNicknameHelperText("");
+    const newNicknameValue = e.target.value;
+    setNewNickname(newNicknameValue);
+
+    const nicknameRegex = /^(?=.*[a-zA-Z0-9가-힣])[a-zA-Z0-9가-힣]{2,10}$/;
+
+    if (nicknameRegex.test(newNicknameValue)) {
+      // 정규식 확인
+      setNicknameHelperText("사용 가능한 닉네임입니다.");
+      setIsNewNicknameValid(true);
+      // 닉네임 중복 확인
+    } else {
+      setNicknameHelperText(
+        "닉네임은 2~10자의 영문, 숫자, 한글로 이루어져야 합니다."
+      );
+      setIsNewNicknameValid(false);
+    }
   };
+
   const handleChangeNewPwd = (e) => {
     setNewPwd(e.target.value);
     const pwdRegex =
@@ -110,6 +126,10 @@ const MyInfoSetting = () => {
   }, []);
 
   const handleUpdateNickname = async () => {
+    if (!isNewNicknameValid) {
+      alert("닉네임이 유효하지 않습니다.");
+      return;
+    }
     const requestData = { newNickname: newNickname };
     try {
       if (!newNickname) {
@@ -209,6 +229,7 @@ const MyInfoSetting = () => {
           onChange={handleChangeNickname}
           helperText={nicknameHelperText}
           width="100%"
+          isValid={isNewNicknameValid}
         />
         <div className="button_wrapper">
           <button onClick={handleUpdateNickname}>닉네임 변경</button>
