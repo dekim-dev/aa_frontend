@@ -8,6 +8,7 @@ const UserStore = (props) => {
   const [authority, setAuthority] = useState("");
   const [isPaidMember, setIsPaidMember] = useState("");
   const [userNickname, setUserNickname] = useState("");
+  const [blockedUsers, setBlockedUsers] = useState([]);
 
   return (
     <UserContext.Provider
@@ -24,6 +25,8 @@ const UserStore = (props) => {
         setIsPaidMember,
         userNickname,
         setUserNickname,
+        blockedUsers,
+        setBlockedUsers,
       }}
     >
       {props.children}

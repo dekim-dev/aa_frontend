@@ -43,6 +43,7 @@ const DropDown = () => {
     setAuthority,
     setIsPaidMember,
     setUserNickname,
+    setBlockedUsers,
     isLogin,
     authority,
   } = useContext(UserContext);
@@ -57,6 +58,8 @@ const DropDown = () => {
         setAuthority(response.authority);
         setIsPaidMember(response.isPaidMember);
         setUserNickname(response.nickname);
+        setBlockedUsers(response.blockedUserIds);
+
         setIsLogin(true);
         console.log(response);
       } catch (error) {
@@ -71,6 +74,7 @@ const DropDown = () => {
     setAuthority,
     setIsPaidMember,
     setUserNickname,
+    setBlockedUsers,
   ]);
 
   return (
