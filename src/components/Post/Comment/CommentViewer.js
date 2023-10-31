@@ -5,10 +5,15 @@ import {
   updateClinicComment,
   updateComment,
 } from "../../../service/ApiService";
-import { useState } from "react";
-import { UserNicknameBar, UserPfImgBar } from "../../common/UserNameTag";
+import { useContext, useState } from "react";
+import {
+  BlockedUser,
+  UserNicknameBar,
+  UserPfImgBar,
+} from "../../common/UserNameTag";
 import { dateFormatWithTime } from "../../../utils/Functions";
 import useWindowResize from "../../../utils/useWindowResize";
+import { UserContext } from "../../../context/UserContext";
 
 const ParentWrapper = styled.div`
   margin: 1rem auto;
@@ -50,6 +55,7 @@ const ParentWrapper = styled.div`
     align-self: flex-start;
     margin-left: 2.4rem;
     max-width: 100%;
+    align-self: center;
   }
   .button_wrapper {
     text-align: center;
@@ -69,13 +75,18 @@ const MobileWrapper = styled.div`
     padding: 0.4rem;
     border-bottom: 1px solid #ececec;
   }
+  .blocked_user_wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
   .comment_user_info_wrapper {
     display: flex;
     gap: 0.2rem;
   }
   .nickname_date_wrapper {
     display: flex;
-    /* flex-direction: column; */
     align-items: center;
     gap: 0.2rem;
     p {
@@ -114,6 +125,8 @@ const CommentViewer = ({
   const [editMode, setEditMode] = useState({});
   const [editedContent, setEditedContent] = useState({});
   const isMobile = useWindowResize();
+  const { blockedUsers } = useContext(UserContext);
+  console.log("blockedUsers: ", blockedUsers);
 
   const handleClickEditBtn = (commentId) => {
     // 댓글을 수정상태로 변경
@@ -191,11 +204,31 @@ const CommentViewer = ({
             commentData.map((comment) => (
               <div className="map_container" key={comment.id}>
                 <div className="comment_user_info_wrapper">
-                  <UserPfImgBar userPfImg={comment.pfImg} />
-                  <div className="nickname_date_wrapper">
-                    <UserNicknameBar userNickname={comment.nickname} />
-                    <p>{dateFormatWithTime(comment.createdAt)}</p>
-                  </div>
+                  {blockedUsers.includes(comment.userId.toString()) ? (
+                    <div className="blocked_user_wrapper">
+                      <p
+                        style={{
+                          color: "gray",
+                          lineHeight: "1.4rem",
+                          fontSize: "0.8rem",
+                        }}
+                      >
+                        차단한 회원이 작성한 댓글입니다.
+                      </p>
+                      <BlockedUser userId={comment.userId} />
+                    </div>
+                  ) : (
+                    <>
+                      <UserPfImgBar userPfImg={comment.pfImg} />
+                      <div className="nickname_date_wrapper">
+                        <UserNicknameBar
+                          userNickname={comment.nickname}
+                          userId={comment.userId}
+                        />
+                        <p>{dateFormatWithTime(comment.createdAt)}</p>
+                      </div>
+                    </>
+                  )}
                 </div>
                 {editMode[comment.id] ? (
                   // 수정 모드
@@ -211,7 +244,10 @@ const CommentViewer = ({
                     }
                   />
                 ) : (
-                  <div className="content">{comment.content}</div>
+                  !blockedUsers.includes(comment.userId.toString()) && (
+                    // 차단된 사용자가 아닌 경우에만 content를 표시
+                    <div className="content">{comment.content}</div>
+                  )
                 )}
                 {comment.userId === userId ? (
                   <div className="button_wrapper">
@@ -239,56 +275,84 @@ const CommentViewer = ({
       ) : (
         <ParentWrapper>
           {commentData &&
-            commentData.map((comment) => (
-              <div className="map_container" key={comment.id}>
-                <div className="comment_info_wrapper">
-                  <div className="user_info_wrapper">
-                    <UserPfImgBar userPfImg={comment.pfImg} />
-                    <UserNicknameBar userNickname={comment.nickname} />
-                  </div>
-                  <div className="createdAt">
-                    {dateFormatWithTime(comment.createdAt)}
-                  </div>
-                </div>
+            commentData.map((comment) => {
+              // 차단된 사용자 확인
+              const isBlockedUser = blockedUsers.includes(
+                comment.userId.toString()
+              );
+              return (
+                <div className="map_container row" key={comment.id}>
+                  {isBlockedUser ? (
+                    <>
+                      <p></p>
+                      <p
+                        style={{
+                          textAlign: "left",
+                          marginLeft: "2.4rem",
+                          color: "gray",
+                        }}
+                      >
+                        차단한 회원이 작성한 댓글입니다.
+                      </p>
+                      <BlockedUser userId={comment.userId} />
+                    </>
+                  ) : (
+                    // 회원이 차단되지 않은 경우에만 회원 정보와 내용 표시
+                    <>
+                      <div className="comment_info_wrapper">
+                        <div className="user_info_wrapper">
+                          <UserPfImgBar userPfImg={comment.pfImg} />
+                          <UserNicknameBar
+                            userNickname={comment.nickname}
+                            userId={comment.userId}
+                          />
+                        </div>
+                        <div className="createdAt">
+                          {dateFormatWithTime(comment.createdAt)}
+                        </div>
+                      </div>
 
-                {editMode[comment.id] ? (
-                  // 수정 모드
-                  <textarea
-                    className="content"
-                    type="text"
-                    value={editedContent[comment.id]}
-                    onChange={(e) =>
-                      setEditedContent({
-                        ...editedContent,
-                        [comment.id]: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <div className="content">{comment.content}</div>
-                )}
-                {comment.userId === userId ? (
-                  <div className="button_wrapper">
-                    {editMode[comment.id] ? (
-                      <button onClick={() => handleSaveEdit(comment.id)}>
-                        저장
+                      {editMode[comment.id] ? (
+                        // 수정 모드
+                        <textarea
+                          className="content"
+                          type="text"
+                          value={editedContent[comment.id]}
+                          onChange={(e) =>
+                            setEditedContent({
+                              ...editedContent,
+                              [comment.id]: e.target.value,
+                            })
+                          }
+                        />
+                      ) : (
+                        <div className="content">{comment.content}</div>
+                      )}
+                    </>
+                  )}
+                  {comment.userId === userId ? (
+                    <div className="button_wrapper">
+                      {editMode[comment.id] ? (
+                        <button onClick={() => handleSaveEdit(comment.id)}>
+                          저장
+                        </button>
+                      ) : (
+                        <button onClick={() => handleClickEditBtn(comment.id)}>
+                          수정
+                        </button>
+                      )}
+                      <button onClick={() => handleClickDeleteBtn(comment.id)}>
+                        삭제
                       </button>
-                    ) : (
-                      <button onClick={() => handleClickEditBtn(comment.id)}>
-                        수정
-                      </button>
-                    )}
-                    <button onClick={() => handleClickDeleteBtn(comment.id)}>
-                      삭제
-                    </button>
-                  </div>
-                ) : (
-                  <div className="button_wrapper">
-                    {/* <button>답글</button> */}
-                  </div>
-                )}
-              </div>
-            ))}
+                    </div>
+                  ) : (
+                    <div className="button_wrapper">
+                      {/* <button>답글</button> */}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </ParentWrapper>
       )}
     </>

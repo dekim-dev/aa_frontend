@@ -1,8 +1,8 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
-import { blockAUser, post, unblockAUser } from "../../service/ApiService";
+import { blockAUser, unblockAUser } from "../../service/ApiService";
 import { UserContext } from "../../context/UserContext";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const ParentWrapper = styled.div`
   img {
@@ -11,7 +11,7 @@ const ParentWrapper = styled.div`
     border-radius: 50%;
   }
   cursor: pointer;
-  position: relative; /* 부모 컨테이너를 상대 위치로 설정합니다. */
+  position: relative;
   .nickname_wrapper {
     &:hover {
       font-weight: bold;
