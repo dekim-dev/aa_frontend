@@ -35,6 +35,7 @@ const LoginForm = () => {
     setIsPaidMember,
     setIsLogin,
     setUserNickname,
+    setBlockedUsers,
   } = useContext(UserContext);
 
   const handleChangeState = (e) => {
@@ -68,6 +69,7 @@ const LoginForm = () => {
         setIsPaidMember(userInfo.isPaidMember);
         setIsLogin(true);
         setUserNickname(userInfo.nickname);
+        setBlockedUsers(userInfo.blockedUserIds);
         console.log(userInfo);
         console.log(UserContext);
         navigate("/");
