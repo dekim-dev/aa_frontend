@@ -118,7 +118,7 @@ const BlockedUserWrapper = styled.div`
   }
   @media screen and (max-width: 768px) {
     margin-left: 0.6rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     line-height: 1.4rem;
   }
 `;

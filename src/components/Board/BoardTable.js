@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
 import styled from "styled-components";
 import { posts } from "../../DummyData";
 import { Link } from "react-router-dom";
 import useWindowResize from "../../utils/useWindowResize";
 import { topics } from "../Post/PostViewer";
+import { UserContext } from "../../context/UserContext";
+import { BlockedUser } from "../common/UserNameTag";
 
 const StyledTable = styled.table`
   margin: 0 auto;
@@ -58,6 +60,8 @@ const WebBoardTable = ({
   selectedPostIds,
   onCheckboxChange,
 }) => {
+  const { blockedUsers } = useContext(UserContext);
+
   if (!Array.isArray(postList)) {
     return <div>검색 결과가 없습니다.</div>;
   }
@@ -79,23 +83,44 @@ const WebBoardTable = ({
           <tbody>
             {postList.map((post) => (
               <tr key={post.id}>
-                <td>
-                  {showCheckbox && (
-                    <input
-                      type="checkbox"
-                      checked={selectedPostIds.includes(post.id)}
-                      onChange={() => onCheckboxChange(post.id)}
-                    />
-                  )}
-                </td>
-                <td className="title">
-                  [{topics[post.topic]}]{" "}
-                  <Link to={`/post/${post.id}`}>{post.title}</Link>
-                </td>
-                <td className="nickname">{post.nickname}</td>
-                <td className="createdAt">{dateFormat(post.createdAt)}</td>
-                <td className="viewCount">{post.viewCount}</td>
-                <td className="likes">{post.likesCount}</td>
+                {blockedUsers.includes(post.userId.toString()) ? (
+                  <>
+                    {/* 차단한 회원일 경우 */}
+                    <td></td>
+                    <td>
+                      <p style={{ color: "gray", textAlign: "left" }}>
+                        차단한 회원이 작성한 글입니다.
+                      </p>
+                    </td>
+                    <td>
+                      <BlockedUser userId={post.userId} />
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                  </>
+                ) : (
+                  <>
+                    {/* 차단하지 않은 회원일 경우 */}
+                    <td>
+                      {showCheckbox && (
+                        <input
+                          type="checkbox"
+                          checked={selectedPostIds.includes(post.id)}
+                          onChange={() => onCheckboxChange(post.id)}
+                        />
+                      )}
+                    </td>
+                    <td className="title">
+                      {`[${topics[post.topic]}] `}
+                      <Link to={`/post/${post.id}`}>{post.title}</Link>
+                    </td>
+                    <td className="nickname">{post.nickname}</td>
+                    <td className="createdAt">{dateFormat(post.createdAt)}</td>
+                    <td className="viewCount">{post.viewCount}</td>
+                    <td className="likes">{post.likesCount}</td>
+                  </>
+                )}
               </tr>
             ))}
           </tbody>
@@ -130,6 +155,11 @@ const MobileWrapper = styled.div`
       font-size: 1rem;
     }
   }
+  .blocked_user_wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
   .row {
     display: flex;
     gap: 1rem;
@@ -149,37 +179,91 @@ const MobileWrapper = styled.div`
   }
 `;
 
+// const MobileBoardTable = ({
+//   postList,
+//   showCheckbox,
+//   selectedPostIds,
+//   onCheckboxChange,
+// }) => {
+//   return (
+//     <MobileWrapper>
+//       <div className="col">
+//         {postList.map((post) => (
+//           <Link className="map_container" to={`/post/${post.id}`} key={post.id}>
+//             <div>
+//               <p className="title">
+//                 [{topics[post.topic]}] {post.title}
+//               </p>
+//               <div className="row">
+//                 {showCheckbox && (
+//                   <input
+//                     type="checkbox"
+//                     checked={selectedPostIds.includes(post.id)}
+//                     onChange={() => onCheckboxChange(post.id)}
+//                   />
+//                 )}
+//                 <p className="nickname">{post.nickname}</p>
+//                 <p className="createdAt">{dateFormat(post.createdAt)}</p>
+//                 <p className="viewCount">조회 {post.viewCount}</p>
+//                 <p className="likes">{post.likesCount}</p>
+//               </div>
+//             </div>
+//           </Link>
+//         ))}
+//       </div>
+//     </MobileWrapper>
+//   );
+// };
+
 const MobileBoardTable = ({
   postList,
   showCheckbox,
   selectedPostIds,
   onCheckboxChange,
 }) => {
+  const { blockedUsers } = useContext(UserContext);
+
   return (
     <MobileWrapper>
       <div className="col">
-        {postList.map((post) => (
-          <Link className="map_container" to={`/post/${post.id}`} key={post.id}>
-            <div>
-              <p className="title">
-                [{topics[post.topic]}] {post.title}
-              </p>
-              <div className="row">
-                {showCheckbox && (
-                  <input
-                    type="checkbox"
-                    checked={selectedPostIds.includes(post.id)}
-                    onChange={() => onCheckboxChange(post.id)}
-                  />
-                )}
-                <p className="nickname">{post.nickname}</p>
-                <p className="createdAt">{dateFormat(post.createdAt)}</p>
-                <p className="viewCount">조회 {post.viewCount}</p>
-                <p className="likes">{post.likesCount}</p>
+        {postList.map((post) => {
+          if (blockedUsers.includes(post.userId.toString())) {
+            return (
+              <div className="blocked_user_wrapper" key={post.id}>
+                <p className="title" style={{ color: "gray" }}>
+                  차단한 회원이 작성한 글입니다.
+                </p>
+                <BlockedUser userId={post.userId} />
               </div>
-            </div>
-          </Link>
-        ))}
+            );
+          } else {
+            return (
+              <Link
+                className="map_container"
+                to={`/post/${post.id}`}
+                key={post.id}
+              >
+                <div>
+                  <p className="title">
+                    [{topics[post.topic]}] {post.title}
+                  </p>
+                  <div className="row">
+                    {showCheckbox && (
+                      <input
+                        type="checkbox"
+                        checked={selectedPostIds.includes(post.id)}
+                        onChange={() => onCheckboxChange(post.id)}
+                      />
+                    )}
+                    <p className="nickname">{post.nickname}</p>
+                    <p className="createdAt">{dateFormat(post.createdAt)}</p>
+                    <p className="viewCount">조회 {post.viewCount}</p>
+                  </div>
+                </div>
+              </Link>
+            );
+          }
+        })}
       </div>
     </MobileWrapper>
   );

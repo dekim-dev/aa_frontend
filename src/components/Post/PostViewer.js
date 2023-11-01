@@ -163,7 +163,10 @@ const PostViewer = ({ postData, canEdit, postId }) => {
             <MobileInfoWrapper>
               <UserPfImgBar userPfImg={postData.pfImg} />
               <div className="nickname_post_info_wrapper">
-                <UserNicknameBar userNickname={postData.nickname} />
+                <UserNicknameBar
+                  userNickname={postData.nickname}
+                  userId={postData.userId}
+                />
                 <div
                   style={{
                     display: "flex",
@@ -183,7 +186,10 @@ const PostViewer = ({ postData, canEdit, postId }) => {
             <div className="post_info_container row">
               <div className="user_info_wrapper">
                 <UserPfImgBar userPfImg={postData.pfImg} />
-                <UserNicknameBar userNickname={postData.nickname} />
+                <UserNicknameBar
+                  userNickname={postData.nickname}
+                  userId={postData.userId}
+                />
               </div>
               <p>{dateFormat(postData.createdAt)}</p>
               <p>조회수 {postData.viewCount}</p>
