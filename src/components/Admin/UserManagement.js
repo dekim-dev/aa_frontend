@@ -35,6 +35,13 @@ const Table = styled.table`
     border-bottom: 1px solid black;
     text-align: center;
   }
+  .blocked_users_wrapper {
+    font-size: 0.8rem;
+    /* cursor: pointer;
+    &:hover {
+      font-weight: bold;
+    } */
+  }
 `;
 
 const MembershipStatus = {
@@ -152,6 +159,7 @@ const UserManagement = () => {
               <th>이메일</th>
               <th>가입일자</th>
               <th>멤버십</th>
+              <th>차단회원</th>
               <th>수정</th>
             </tr>
           </thead>
@@ -203,6 +211,17 @@ const UserManagement = () => {
                     </select>
                   ) : (
                     user.isPaidMember
+                  )}
+                </td>
+                <td>
+                  {user.blockedUserNicknames.length >= 1 ? (
+                    <span className="blocked_users_wrapper">
+                      {user.blockedUserNicknames
+                        .map((blockedUser) => blockedUser)
+                        .join(", ")}
+                    </span>
+                  ) : (
+                    <span className="blocked_users_wrapper">-</span>
                   )}
                 </td>
                 <td>
