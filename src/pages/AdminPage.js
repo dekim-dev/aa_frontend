@@ -6,6 +6,7 @@ import ClinicManagement from "../components/Admin/ClinicManagement";
 import AdManagement from "../components/Admin/AdManagement";
 import PostManagement from "../components/Admin/PostManagement";
 import CommentManagement from "../components/Admin/CommentManagement";
+import ReportManagement from "../components/Admin/ReportManagement";
 
 const ParentWrapper = styled.div`
   display: flex;
@@ -22,6 +23,7 @@ const AdminPage = () => {
         <Route path="/ad" element={<AdManagement />} />
         <Route path="/post" element={<PostManagement />} />
         <Route path="/comment" element={<CommentManagement />} />
+        <Route path="/report" element={<ReportManagement />} />
       </Routes>
     </ParentWrapper>
   );
