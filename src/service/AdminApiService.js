@@ -205,3 +205,18 @@ export const deleteReports = async (reportIds) => {
     return error;
   }
 };
+
+export const updateReportStatus = async (reportId) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/admin/report/${reportId}`,
+      "PATCH",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};

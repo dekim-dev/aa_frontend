@@ -1,6 +1,10 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { allReports, deleteReports } from "../../service/AdminApiService";
+import {
+  allReports,
+  deleteReports,
+  updateReportStatus,
+} from "../../service/AdminApiService";
 import Pagination from "../common/Pagination";
 import { dateFormat } from "../../utils/Functions";
 import AdminEmailPopUp from "./AdminEmailPopUp";
@@ -14,7 +18,8 @@ const ParentContainer = styled.div`
     margin: 1rem auto;
     width: 90%;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    gap: 2rem;
   }
   .pagination {
     margin: 1rem auto;
@@ -134,6 +139,24 @@ const ReportManagement = () => {
     }
   };
 
+  const handleManagedBtn = async () => {
+    if (selectedReportIds.length === 0 || selectedReportIds.length > 1) {
+      console.log(selectedReportIds);
+      alert("신고글을 하나씩 선택해 주세요.");
+      return;
+    }
+    try {
+      await updateReportStatus(selectedReportIds);
+      console.log("🟢업데이트 된 신고글번호: ", selectedReportIds);
+      alert("처리가 완료 되었습니다.");
+      setSelectedReportIds([]);
+      setSelectAll(false);
+      fetchReportPages();
+    } catch (error) {
+      console.error("🔴신고글 상태 업데이트 실패", error);
+    }
+  };
+
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= Math.ceil(totalResults / pageSize)) {
       setCurrentPage(newPage);
@@ -203,6 +226,7 @@ const ReportManagement = () => {
         />
         <div className="button_container">
           <button onClick={handleDeleteBtn}>신고글 삭제</button>
+          <button onClick={handleManagedBtn}>처리 완료</button>
         </div>
       </ParentContainer>
       <AdminEmailPopUp
