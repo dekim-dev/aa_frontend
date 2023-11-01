@@ -7,6 +7,7 @@ import AdManagement from "../components/Admin/AdManagement";
 import PostManagement from "../components/Admin/PostManagement";
 import CommentManagement from "../components/Admin/CommentManagement";
 import ReportManagement from "../components/Admin/ReportManagement";
+import InquiryManagement from "../components/Admin/InquiryManagement";
 
 const ParentWrapper = styled.div`
   display: flex;
@@ -24,6 +25,7 @@ const AdminPage = () => {
         <Route path="/post" element={<PostManagement />} />
         <Route path="/comment" element={<CommentManagement />} />
         <Route path="/report" element={<ReportManagement />} />
+        <Route path="/inquiry" element={<InquiryManagement />} />
       </Routes>
     </ParentWrapper>
   );

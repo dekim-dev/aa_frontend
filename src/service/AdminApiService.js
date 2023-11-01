@@ -220,3 +220,34 @@ export const updateReportStatus = async (reportId) => {
     return error;
   }
 };
+
+// ✨ 문의 관리
+export const allInquiries = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/admin/inquiry?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const updateInquiryStatus = async (inquiryID) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/admin/inquiry/${inquiryID}`,
+      "PATCH",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
