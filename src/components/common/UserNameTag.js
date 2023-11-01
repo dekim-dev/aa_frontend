@@ -1,8 +1,9 @@
 import { useContext, useState } from "react";
 import styled from "styled-components";
-import { blockAUser, unblockAUser } from "../../service/ApiService";
+import { blockAUser, reportUser, unblockAUser } from "../../service/ApiService";
 import { UserContext } from "../../context/UserContext";
 import { useNavigate, useParams } from "react-router-dom";
+import UserReportPopUp from "./UserReportPopUp";
 
 const ParentWrapper = styled.div`
   img {
@@ -55,6 +56,37 @@ export const UserNicknameBar = ({ userNickname, userId }) => {
   const { setBlockedUsers } = useContext(UserContext);
   const { postId } = useParams();
   const navigate = useNavigate();
+  const [isReportPopupOpen, setIsReportPopupOpen] = useState(false);
+
+  const handleUserReport = () => {
+    setIsReportPopupOpen(true);
+  };
+
+  const handleReportUser = async ({ reportReason }) => {
+    if (reportReason === null) {
+      alert("신고 이유를 작성하세요.");
+    } else {
+      try {
+        const reportRequestDTO = {
+          content: reportReason,
+          reportedUserId: userId,
+        };
+        const response = await reportUser(reportRequestDTO);
+        if (response === "회원 신고 완료") {
+          console.log("🟢신고 접수 성공", response);
+          alert("신고가 접수되었습니다.");
+          setIsReportPopupOpen(false);
+        } else {
+          console.log("🔴신고 접수 실패", response);
+          alert(response.data.message);
+        }
+      } catch (error) {
+        console.log("🔴신고 접수 에러", error);
+        alert(error);
+      }
+    }
+  };
+
   const toggleDropdown = () => {
     setIsDropdownOpen(!isDropdownOpen);
     console.log(userNickname);
@@ -94,8 +126,13 @@ export const UserNicknameBar = ({ userNickname, userId }) => {
       </div>
       <DropdownMenu className="dropdownMenu_wrapper" open={isDropdownOpen}>
         <p onClick={handleUserBlock}>회원 차단하기</p>
-        <p>회원 신고하기</p>
+        <p onClick={handleUserReport}>회원 신고하기</p>
       </DropdownMenu>
+      <UserReportPopUp
+        isOpen={isReportPopupOpen}
+        onClose={() => setIsReportPopupOpen(false)}
+        onSubmit={handleReportUser}
+      />
     </ParentWrapper>
   );
 };

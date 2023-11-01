@@ -803,3 +803,18 @@ export const unblockAUser = async (userId) => {
     return error;
   }
 };
+
+export const reportUser = async (reportRequestDTO) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/user/report`,
+      "POST",
+      reportRequestDTO,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
