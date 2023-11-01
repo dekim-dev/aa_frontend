@@ -804,6 +804,7 @@ export const unblockAUser = async (userId) => {
   }
 };
 
+// 회원 신고
 export const reportUser = async (reportRequestDTO) => {
   try {
     const token = localStorage.getItem("ACCESS_TOKEN");

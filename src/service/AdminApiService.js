@@ -179,3 +179,29 @@ export const deleteComments = async (commentIds) => {
     return error;
   }
 };
+
+// ✨ 신고 관리
+export const allReports = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/admin/report?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
+export const deleteReports = async (reportIds) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(`/admin/report`, "DELETE", reportIds, token);
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
