@@ -819,3 +819,15 @@ export const reportUser = async (reportRequestDTO) => {
     return error;
   }
 };
+
+// ✨ 메인
+export const getLatestPosts = async (boardCategory) => {
+  try {
+    const response = await axios.get(
+      API_BASE_URL + `/main/post/${boardCategory}`
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
