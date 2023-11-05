@@ -7,7 +7,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserContext } from "../context/UserContext";
 
 const ParentWrapper = styled.div`
-  width: 30%;
+  width: 20rem;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -16,8 +16,10 @@ const ParentWrapper = styled.div`
     width: 90%;
   }
   .extra_wrapper {
+    width: 100%;
     display: flex;
     align-items: center;
+    justify-content: space-evenly;
   }
 `;
 

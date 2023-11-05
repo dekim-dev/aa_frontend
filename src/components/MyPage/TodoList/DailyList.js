@@ -9,13 +9,13 @@ import {
 import ItemAddIcon from "./ItemAddIcon";
 
 const ParentWrapper = styled.div`
-  width: 32rem;
-  height: 20rem;
+  width: ${(props) => props.width || "30rem"};
+  height: ${(props) => props.height || "20rem"};
   padding: 1rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border: 1px solid black;
+  border: 1px solid gray;
   border-radius: 10px;
 
   .header {
@@ -73,7 +73,7 @@ const Checkbox = styled.input`
   height: 20px;
 `;
 
-const DailyTodoList = ({ selectedDate, dailyTodoItems }) => {
+const DailyTodoList = ({ selectedDate, dailyTodoItems, width, height }) => {
   const [dailyTodoList, setDailyTodoList] = useState([]);
 
   useEffect(() => {
@@ -151,7 +151,7 @@ const DailyTodoList = ({ selectedDate, dailyTodoItems }) => {
   };
 
   return (
-    <ParentWrapper>
+    <ParentWrapper width={width} height={height}>
       <div className="header">
         <h2 className="date">{formatDate(selectedDate)}</h2>
         <div className="add_icon">
