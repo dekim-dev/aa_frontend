@@ -1,16 +1,17 @@
 import axios from "axios";
 import { API_BASE_URL } from "../app-config";
 import { dateFormatWithDash } from "../utils/Functions";
+import { useNavigate } from "react-router-dom";
 
 /** ✨api사용을 위한 call 함수 */
 export const call = async (api, method, request) => {
   let token = localStorage.getItem("ACCESS_TOKEN");
 
-  if (!token) {
-    // 토큰이 없을 경우 로그인 필요
-    alert("로그인이 필요합니다.");
-    throw new Error("로그인이 필요합니다.");
-  }
+  // if (!token) {
+  //   // 토큰이 없을 경우 로그인 필요
+  //   alert("로그인이 필요합니다.");
+  //   throw new Error("로그인이 필요합니다.");
+  // }
 
   const config = {
     method: method,
@@ -829,5 +830,25 @@ export const getLatestPosts = async (boardCategory) => {
     return response;
   } catch (error) {
     return error;
+  }
+};
+
+// 공지사항 게시글 (토큰 필요 X)
+export const noticePost = async (postId) => {
+  try {
+    const response = await axios.get(API_BASE_URL + `/main/notice/${postId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// 공지사항 게시글리스트 (토큰 필요 X)
+export const noticePostList = async () => {
+  try {
+    const response = await axios.get(API_BASE_URL + `/main/board/notice`);
+    return response.data;
+  } catch (error) {
+    return error.response.data;
   }
 };
