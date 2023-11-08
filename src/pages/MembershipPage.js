@@ -11,16 +11,16 @@ const MembershipPage = () => {
   const { isPaidMember } = useContext(UserContext);
   return (
     <>
-      {isPaidMember === "PAID" ? (
-        <PaidMember />
-      ) : (
-        <Routes>
+      <Routes>
+        {isPaidMember === "PAID" ? (
+          <Route index path="/" element={<PaidMember />} />
+        ) : (
           <Route index path="/" element={<ReadyOrDes />} />
-          <Route path="/success" element={<Success />} />
-          <Route path="/cancel" element={<Cancel />} />
-          <Route path="/fail" element={<Fail />} />
-        </Routes>
-      )}
+        )}
+        <Route path="/success" element={<Success />} />
+        <Route path="/cancel" element={<Cancel />} />
+        <Route path="/fail" element={<Fail />} />
+      </Routes>
     </>
   );
 };

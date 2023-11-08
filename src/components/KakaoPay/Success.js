@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 const ParentWrapper = styled.div`
@@ -42,6 +42,7 @@ const ParentWrapper = styled.div`
 `;
 
 const Success = () => {
+  const navigate = useNavigate();
   const location = useLocation();
   const { paymentData } = location.state;
   console.log(paymentData);
@@ -58,9 +59,7 @@ const Success = () => {
       <p>
         <span>결제 금액 :</span> {paymentData.total}원
       </p>
-      <button>
-        <Link to="/">메인으로 가기</Link>
-      </button>
+      <button onClick={() => navigate("/")}>메인으로 가기</button>
     </ParentWrapper>
   );
 };
