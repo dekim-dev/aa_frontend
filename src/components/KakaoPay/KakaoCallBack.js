@@ -40,7 +40,6 @@ const KakaoCallback = () => {
           amount: { total },
         } = response;
         console.log("🟢pgToken success: ", response);
-        setIsPaidMember("PAID");
         navigate("/membership/success", {
           state: { paymentData: { item_name, created_at, total } },
         });
