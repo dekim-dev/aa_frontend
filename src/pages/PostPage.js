@@ -15,14 +15,15 @@ const PostPage = () => {
   const [postData, setPostData] = useState({});
   const [canEdit, setCanEdit] = useState(false);
   const [comments, setComments] = useState([]);
+  const token = localStorage.getItem("ACCESS_TOKEN");
 
   useEffect(() => {
-    if (!isLogin) {
+    if (!token) {
       fetchNotice(postId);
     } else {
       fetchData(); // fetchData 함수 호출
     }
-  }, [postId, isLogin]);
+  }, [postId, isLogin, token]);
 
   const fetchData = async () => {
     try {

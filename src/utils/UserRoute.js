@@ -1,12 +1,10 @@
-import { useContext } from "react";
 import { Navigate, useLocation } from "react-router-dom";
-import { UserContext } from "../context/UserContext";
 
 const UserRoute = ({ children }) => {
   const location = useLocation();
-  const { isLogin } = useContext(UserContext);
+  let token = localStorage.getItem("ACCESS_TOKEN");
 
-  return isLogin ? (
+  return token ? (
     children
   ) : (
     <>
