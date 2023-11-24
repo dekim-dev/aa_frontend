@@ -20,6 +20,9 @@ import KakaoCallback from "./components/KakaoPay/KakaoCallBack";
 import FindPwdPage from "./pages/FindPwdPage";
 import UserRoute from "./utils/UserRoute";
 import AdminRoute from "./utils/AdminRoute";
+import UserAgreements from "./components/common/UserAgreements";
+import UserPolicy from "./components/common/UserPolicy";
+import BottomNav from "./components/common/BottomNav";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -136,8 +139,11 @@ function App() {
               </AdminRoute>
             }
           />
+          <Route path="/user-agreements" element={<UserAgreements />} />
+          <Route path="/user-policy" element={<UserPolicy />} />
         </Routes>
         <Ad />
+        <BottomNav />
       </Router>
     </UserStore>
   );
