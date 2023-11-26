@@ -23,6 +23,7 @@ import AdminRoute from "./utils/AdminRoute";
 import UserAgreements from "./components/common/UserAgreements";
 import UserPolicy from "./components/common/UserPolicy";
 import BottomNav from "./components/common/BottomNav";
+import InquiryPage from "./pages/InquiryPage";
 
 const GlobalStyle = createGlobalStyle`
   * {
@@ -141,6 +142,7 @@ function App() {
           />
           <Route path="/user-agreements" element={<UserAgreements />} />
           <Route path="/user-policy" element={<UserPolicy />} />
+          <Route path="/user-inquiry" element={<InquiryPage />} />
         </Routes>
         <Ad />
         <BottomNav />

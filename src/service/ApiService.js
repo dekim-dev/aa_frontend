@@ -852,3 +852,19 @@ export const noticePostList = async () => {
     return error.response.data;
   }
 };
+
+// 문의 보내기
+export const sendInquiry = async (inquiryRequestDTO) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/user/inquiry`,
+      "POST",
+      inquiryRequestDTO,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
