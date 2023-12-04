@@ -3,6 +3,7 @@ import {
   getClinicList,
   getClinicListByAddress,
   getClinicListByKeyword,
+  getClinicListByRecommendCount,
 } from "../../service/ApiService";
 import { useLocation } from "react-router-dom";
 import { styled } from "styled-components";
@@ -25,6 +26,13 @@ const ParentWrapper = styled.div`
   .search {
     align-self: center;
   }
+  .order-selector {
+    align-self: center;
+
+    width: 80%;
+    margin-top: -1rem;
+    margin-bottom: -0.8rem;
+  }
 `;
 
 const ClinicTable = ({ isMobile }) => {
@@ -33,6 +41,7 @@ const ClinicTable = ({ isMobile }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalResults, setTotalResults] = useState();
   const [searchAddress, setSearchAddress] = useState("");
+  const [order, setOrder] = useState("default"); // default는 기본 정렬
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -54,20 +63,25 @@ const ClinicTable = ({ isMobile }) => {
           page - 1,
           pageSize
         );
+      } else if (order === "recommend") {
+        response = await getClinicListByRecommendCount(page - 1, pageSize);
+        console.log(response);
       } else {
         response = await getClinicList(page - 1, pageSize);
+        console.log(response);
       }
 
       if (response) {
         const clinicData =
-          searchKeyword || searchAddress ? response.clinics : response.content;
+          searchKeyword || searchAddress || order === "recommend"
+            ? response.clinics
+            : response.content;
         setClinicList(clinicData);
         setTotalResults(
-          searchKeyword || searchAddress
+          searchKeyword || searchAddress || order === "recommend"
             ? response.totalResults
             : response.totalElements
         );
-        console.log(response);
       }
     } catch (error) {
       console.log(error);
@@ -76,20 +90,26 @@ const ClinicTable = ({ isMobile }) => {
 
   useEffect(() => {
     fetchData(currentPage);
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, order]);
 
   const TableComponent = isMobile ? MobileClinicTable : WebClinicTable;
 
   const handleSearch = () => {
-    setCurrentPage(1); // 검색 시 페이지를 1로 초기화
+    setCurrentPage(1);
     setSearchKeyword("");
     setSearchAddress("");
+    setOrder("default");
   };
 
   const handlePageChange = (newPage) => {
     if (newPage >= 1 && newPage <= Math.ceil(totalResults / pageSize)) {
       setCurrentPage(newPage);
     }
+  };
+
+  const handleOrderChange = (selectedOrder) => {
+    setCurrentPage(1);
+    setOrder(selectedOrder);
   };
 
   return (
@@ -104,6 +124,17 @@ const ClinicTable = ({ isMobile }) => {
         handleSearch={handleSearch}
         fetchData={fetchData}
       />
+      {/* <div className="order-selector">
+        <label>
+          <select
+            value={order}
+            onChange={(e) => handleOrderChange(e.target.value)}
+          >
+            <option value="default"> - </option>
+            <option value="recommend">추천 수</option>
+          </select>
+        </label>
+      </div> */}
       <TableComponent clinicList={clinicList} />
       <Pagination
         className="pagination"

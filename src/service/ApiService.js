@@ -249,6 +249,22 @@ export const getClinicListByAddress = async (address, page, pageSize) => {
   }
 };
 
+// 추천수로 병원 정렬
+export const getClinicListByRecommendCount = async (page, pageSize) => {
+  try {
+    const token = localStorage.getItem("ACCESS_TOKEN");
+    const response = await call(
+      `/clinics/recommend?page=${page}&pageSize=${pageSize}`,
+      "GET",
+      null,
+      token
+    );
+    return response;
+  } catch (error) {
+    return error;
+  }
+};
+
 // Todo 아이템 생성
 export const createTodoItem = async (todoItemDTO) => {
   try {
