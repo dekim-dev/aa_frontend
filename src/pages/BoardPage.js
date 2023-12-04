@@ -114,6 +114,7 @@ const BoardPage = ({ boardName }) => {
       );
       setPostList(response.content);
       setTotalResults(response.totalElements);
+      console.log("포스트 리스트: ", response);
     } catch (error) {
       console.log(error);
     }

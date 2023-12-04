@@ -112,7 +112,12 @@ const WebBoardTable = ({
                   {topics[post.topic]
                     ? `[${topics[post.topic]}]  `
                     : `[공지]  `}
-                  <Link to={`/post/${post.id}`}>{post.title}</Link>
+                  <Link to={`/post/${post.id}`}>
+                    {post.title}{" "}
+                    <span style={{ fontSize: "0.9rem" }}>
+                      [{post.commentsCount}]
+                    </span>
+                  </Link>
                 </td>
                 <td className="nickname">{post.nickname}</td>
                 <td className="createdAt">{dateFormat(post.createdAt)}</td>
@@ -206,7 +211,10 @@ const MobileBoardTable = ({
               >
                 <div>
                   <p className="title">
-                    [{topics[post.topic]}] {post.title}
+                    [{topics[post.topic]}] {post.title}{" "}
+                    <span style={{ fontSize: "0.9rem" }}>
+                      [{post.commentsCount}]
+                    </span>
                   </p>
                   <div className="row">
                     {showCheckbox && (
