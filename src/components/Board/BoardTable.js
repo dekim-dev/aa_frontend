@@ -211,7 +211,10 @@ const MobileBoardTable = ({
               >
                 <div>
                   <p className="title">
-                    [{topics[post.topic]}] {post.title}{" "}
+                    {topics[post.topic]
+                      ? `[${topics[post.topic]}]  `
+                      : `[공지]  `}
+                    {post.title}{" "}
                     <span style={{ fontSize: "0.9rem" }}>
                       [{post.commentsCount}]
                     </span>
