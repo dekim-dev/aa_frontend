@@ -82,7 +82,7 @@ const Ad = () => {
           </MobileWrapper>
         );
       } else {
-        return <div>로딩 중...</div>;
+        return <div>loading...</div>;
       }
     } else {
       // 웹페이지
@@ -101,11 +101,12 @@ const Ad = () => {
           </ParentWrapper>
         );
       } else {
-        return <div>로딩 중...</div>;
+        return <div>loading...</div>;
       }
     }
   } else {
-    return null;
+    // return null;
+    return <div style={{ height: "2rem" }}></div>;
   }
 };
 
