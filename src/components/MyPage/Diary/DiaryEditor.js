@@ -20,12 +20,16 @@ const ParentWrapper = styled.div`
   }
   @media screen and (max-width: 768px) {
     width: 90%;
+    .med_wrapper {
+      /* width: 50%; */
+    }
   }
   .med_wrapper {
+    width: 70%;
     display: flex;
     align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
+    justify-content: start;
+    gap: 0.4rem;
   }
 `;
 
